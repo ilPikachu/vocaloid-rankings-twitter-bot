@@ -1,0 +1,19 @@
+{
+  "name": "miku_twitter_bot",
+  "version": "1.0.0",
+  "description": "This is a twitter bot that updates about hatsune miku related info periodically",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilPikachu/miku_twitter_bot.git"
+  },
+  "author": "Bob Bao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ilPikachu/miku_twitter_bot/issues"
+  },
+  "homepage": "https://github.com/ilPikachu/miku_twitter_bot#readme"
+}
