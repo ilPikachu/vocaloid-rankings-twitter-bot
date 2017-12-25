@@ -4,7 +4,7 @@
   "description": "This is a twitter bot that updates about hatsune miku related info periodically",
   "main": "index.js",
   "scripts": {
-    "start" : "node index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/ilPikachu/miku_twitter_bot#readme",
   "dependencies": {
+    "jsdom": "^11.5.1",
+    "moment": "^2.20.1",
+    "request": "^2.83.0",
     "twit": "^2.2.9"
   }
 }
