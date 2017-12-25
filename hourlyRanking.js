@@ -18,7 +18,9 @@ function hourlyRankingTweetUpdater(){
 
             else{
                 console.log(moment().utc().format() + " Ranking page fetch failure. Status code: " + response.statusCode);
-            }
+                //retry one more time just incase of network congestion
+                hourlyRankingTweetUpdater();
+            }   
         });
     }
     else{
@@ -128,6 +130,8 @@ function tweetPostStatUpdate(message){
     
         else{
             console.log(moment().utc().format() + " Tweet failed. Status code: " + response.statusCode);
+            //retry one more time just incase of network congestion
+            tweetPostStatUpdate(message);
         }
     });
 }
@@ -141,18 +145,6 @@ function tweetTitleTruncate(title){
         return title;
     }
 }
-/*
-try{
-    hourlyRankingTweetUpdater();
-    setInterval(hourlyRankingTweetUpdater, 60*60*1000);
-}
-
-catch (error){
-    console.log(error);
-    hourlyRankingTweetUpdater();
-    console.log('wtf');
-}
-*/
 
 hourlyRankingTweetUpdater();
 setInterval(hourlyRankingTweetUpdater, 60*60*1000);
