@@ -7,22 +7,14 @@ const moment = require('moment');
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
-
-let secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
-
-let twitAuth = {
-    consumer_key:         secrets.twitter.consumer_key,
-    consumer_secret:      secrets.twitter.consumer_secret,
-    access_token:         secrets.twitter.access_token,
-    access_token_secret:  secrets.twitter.access_token_secret
-};
-
-//let twitUser = new Twit(twitAuth);
-
-function rankingDataUpdater(){
+function hourlyRankingTweetUpdater(){
     request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
         if (response.statusCode === 200){
-            fs.writeFileSync("./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html", body);
+            let rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";
+            if (!fs.existsSync(rankingFilePath)){            
+                fs.writeFileSync(rankingFilePath, body);
+            }
+            hourlyRankingTweet(rankingFilePath);
         }
 
         else{
@@ -65,9 +57,9 @@ function createRankingList(RankingHtmlList){
     return rankingList
 }
 
-function getRankingLists(){
-    //let file = fs.readFileSync("./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html");  //"./rank_data/vocaloid_ranking_2017_12_24_05.html"
-    let file = fs.readFileSync("./rank_data/vocaloid_ranking_2017_12_24_05.html");  //"./rank_data/vocaloid_ranking_2017_12_24_05.html"    
+function getRankingLists(rankingFilePath){
+    let file = fs.readFileSync(rankingFilePath);  
+    //let file = fs.readFileSync("./rank_data/vocaloid_ranking_2017_12_24_05.html");  //"./rank_data/vocaloid_ranking_2017_12_24_05.html"    
     const dom = new JSDOM(file);
     let rankingLists = dom.window.document.getElementById("wrapper")
                          .getElementsByClassName("ranking_cnt clearfix").item(0)
@@ -95,8 +87,42 @@ function getRankingLists(){
 
 }
 
-let rankingLists = getRankingLists();
-fs.writeFileSync("./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json", JSON.stringify(rankingLists));
+function hourlyRankingTweet(rankingFilePath){
+    
+    let rankingLists = getRankingLists(rankingFilePath);
+    if (!fs.existsSync("./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json")){
+        fs.writeFileSync("./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json", JSON.stringify(rankingLists));
+    }
 
+    let secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
 
-//console.log(rankingLists);
+    let twitAuth = {
+        consumer_key:         secrets.twitter.consumer_key,
+        consumer_secret:      secrets.twitter.consumer_secret,
+        access_token:         secrets.twitter.access_token,
+        access_token_secret:  secrets.twitter.access_token_secret
+    };
+
+    let twitUser = new Twit(twitAuth);
+
+    let hourlyTweet = "毎時ランキング Hourly: \n" 
+                    + "1. " + rankingLists.hourly.rank1.title + "\n" + rankingLists.hourly.rank1.uri + "\n" 
+                    + "2. " + rankingLists.hourly.rank2.title + "\n" + rankingLists.hourly.rank2.uri + "\n" 
+                    + "3. " + rankingLists.hourly.rank3.title + "\n" + rankingLists.hourly.rank3.uri;
+
+    console.log(hourlyTweet);
+    /*
+    twitUser.post("statuses/update", { status: hourlyTweet }, function(err, data, response) {
+        if (response.statusCode === 200){
+            console.log("Tweet successful: " + response.statusCode)
+        }
+
+        else{
+            console.log(moment().utc().format() + " Tweet failed. Status code: " + response.statusCode);
+        }
+        
+    });
+    */
+}
+
+hourlyRankingTweetUpdater();
