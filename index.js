@@ -85,9 +85,10 @@ function hourlyRankingTweet(rankingFilePath){
         + "3. " + rankingLists.hourly.rank3.title + "\n" + rankingLists.hourly.rank3.uri;
 
         console.log(hourlyTweet + "\n");
-        console.log("----------------\n");
 
         tweetPostStatUpdate(hourlyTweet);
+
+        console.log("----------------\n");        
     }
 
     else{
@@ -99,9 +100,10 @@ function hourlyRankingTweet(rankingFilePath){
         + "3. " + rankingLists.hourly.rank3.title + "\n" + rankingLists.hourly.rank3.uri;
 
         console.log(hourlyTweet + "\n");
-        console.log("----------------\n");        
 
         tweetPostStatUpdate(hourlyTweet);
+
+        console.log("----------------\n");               
     }
     
     
