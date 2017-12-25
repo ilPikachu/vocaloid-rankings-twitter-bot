@@ -79,10 +79,10 @@ function hourlyRankingTweet(rankingFilePath){
         let rankingLists = getRankingLists(rankingFilePath);        
         fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
 
-        let hourlyTweet = "毎時ランキング Hourly: \n" 
-        + "1. " + rankingLists.hourly.rank1.title + "\n" + rankingLists.hourly.rank1.uri + "\n" 
-        + "2. " + rankingLists.hourly.rank2.title + "\n" + rankingLists.hourly.rank2.uri + "\n" 
-        + "3. " + rankingLists.hourly.rank3.title + "\n" + rankingLists.hourly.rank3.uri;
+        let hourlyTweet = "毎時ランキング\n" 
+        + "1. " + tweetTitleTruncate(rankingLists.hourly.rank1.title) + "\n" + rankingLists.hourly.rank1.uri + "\n" 
+        + "2. " + tweetTitleTruncate(rankingLists.hourly.rank2.title) + "\n" + rankingLists.hourly.rank2.uri + "\n" 
+        + "3. " + tweetTitleTruncate(rankingLists.hourly.rank3.title) + "\n" + rankingLists.hourly.rank3.uri;
 
         console.log(hourlyTweet + "\n");
 
@@ -94,10 +94,10 @@ function hourlyRankingTweet(rankingFilePath){
     else{
         let rankingLists = JSON.parse(fs.readFileSync(processedRankingFilePath));
 
-        let hourlyTweet = "毎時ランキング Hourly: \n" 
-        + "1. " + rankingLists.hourly.rank1.title + "\n" + rankingLists.hourly.rank1.uri + "\n" 
-        + "2. " + rankingLists.hourly.rank2.title + "\n" + rankingLists.hourly.rank2.uri + "\n" 
-        + "3. " + rankingLists.hourly.rank3.title + "\n" + rankingLists.hourly.rank3.uri;
+        let hourlyTweet = "毎時ランキング\n" 
+        + "1. " + tweetTitleTruncate(rankingLists.hourly.rank1.title) + "\n" + rankingLists.hourly.rank1.uri + "\n" 
+        + "2. " + tweetTitleTruncate(rankingLists.hourly.rank2.title) + "\n" + rankingLists.hourly.rank2.uri + "\n" 
+        + "3. " + tweetTitleTruncate(rankingLists.hourly.rank3.title) + "\n" + rankingLists.hourly.rank3.uri;
 
         console.log(hourlyTweet + "\n");
 
@@ -131,6 +131,28 @@ function tweetPostStatUpdate(message){
         }
     });
 }
+
+function tweetTitleTruncate(title){
+    //truncate within 30 characters, 98 base characters, floor((280 - 98) / 3) / 2 = 30
+    if (title.length > 30){
+        return title.substring(0, 30);
+    }
+    else{
+        return title;
+    }
+}
+/*
+try{
+    hourlyRankingTweetUpdater();
+    setInterval(hourlyRankingTweetUpdater, 60*60*1000);
+}
+
+catch (error){
+    console.log(error);
+    hourlyRankingTweetUpdater();
+    console.log('wtf');
+}
+*/
 
 hourlyRankingTweetUpdater();
 setInterval(hourlyRankingTweetUpdater, 60*60*1000);
