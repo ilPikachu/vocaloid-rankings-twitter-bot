@@ -1,4 +1,4 @@
 # Miku Twitter Bot
-This is a twitter bot that updates about hatsune miku related info periodically
+This is a twitter bot that updates about vocaloid songs rankings every hour
 ## LICENSE
 MIT
