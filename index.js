@@ -8,19 +8,22 @@ const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
 function hourlyRankingTweetUpdater(){
-    request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
-        if (response.statusCode === 200){
-            let rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";
-            if (!fs.existsSync(rankingFilePath)){            
+    let rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
+    if (!fs.existsSync(rankingFilePath)){
+        request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
+            if (response.statusCode === 200){
                 fs.writeFileSync(rankingFilePath, body);
+                hourlyRankingTweet(rankingFilePath);
             }
-            hourlyRankingTweet(rankingFilePath);
-        }
 
-        else{
-            console.log(moment().utc().format() + " Ranking page fetch failure. Status code: " + response.statusCode);
-        }
-    });
+            else{
+                console.log(moment().utc().format() + " Ranking page fetch failure. Status code: " + response.statusCode);
+            }
+        });
+    }
+    else{
+        hourlyRankingTweet(rankingFilePath);
+    }
 }
 
 /*
@@ -83,46 +86,64 @@ function getRankingLists(rankingFilePath){
         "lastUpdated": moment().utc().format()
     };
 
-    return rankingLists
+    return rankingLists;
 
 }
 
 function hourlyRankingTweet(rankingFilePath){
     
-    let rankingLists = getRankingLists(rankingFilePath);
-    if (!fs.existsSync("./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json")){
-        fs.writeFileSync("./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json", JSON.stringify(rankingLists));
+    let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
+    if (!fs.existsSync(processedRankingFilePath)){
+        let rankingLists = getRankingLists(rankingFilePath);        
+        fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+
+        let hourlyTweet = "毎時ランキング Hourly: \n" 
+        + "1. " + rankingLists.hourly.rank1.title + "\n" + rankingLists.hourly.rank1.uri + "\n" 
+        + "2. " + rankingLists.hourly.rank2.title + "\n" + rankingLists.hourly.rank2.uri + "\n" 
+        + "3. " + rankingLists.hourly.rank3.title + "\n" + rankingLists.hourly.rank3.uri;
+
+        console.log(hourlyTweet);
+
+        //tweetPostStatUpdate(hourlyTweet);
     }
 
-    let secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
+    else{
+        let rankingLists = JSON.parse(fs.readFileSync(processedRankingFilePath));
 
+        let hourlyTweet = "毎時ランキング Hourly: \n" 
+        + "1. " + rankingLists.hourly.rank1.title + "\n" + rankingLists.hourly.rank1.uri + "\n" 
+        + "2. " + rankingLists.hourly.rank2.title + "\n" + rankingLists.hourly.rank2.uri + "\n" 
+        + "3. " + rankingLists.hourly.rank3.title + "\n" + rankingLists.hourly.rank3.uri;
+
+        console.log(hourlyTweet);
+
+        //tweetPostStatUpdate(hourlyTweet);
+    }
+    
+    
+}
+
+function tweetPostStatUpdate(message){
+    let secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
+    
     let twitAuth = {
         consumer_key:         secrets.twitter.consumer_key,
         consumer_secret:      secrets.twitter.consumer_secret,
         access_token:         secrets.twitter.access_token,
         access_token_secret:  secrets.twitter.access_token_secret
     };
-
+    
     let twitUser = new Twit(twitAuth);
-
-    let hourlyTweet = "毎時ランキング Hourly: \n" 
-                    + "1. " + rankingLists.hourly.rank1.title + "\n" + rankingLists.hourly.rank1.uri + "\n" 
-                    + "2. " + rankingLists.hourly.rank2.title + "\n" + rankingLists.hourly.rank2.uri + "\n" 
-                    + "3. " + rankingLists.hourly.rank3.title + "\n" + rankingLists.hourly.rank3.uri;
-
-    console.log(hourlyTweet);
-    /*
-    twitUser.post("statuses/update", { status: hourlyTweet }, function(err, data, response) {
+            
+    twitUser.post("statuses/update", { status: message }, (err, data, response) => {
         if (response.statusCode === 200){
             console.log("Tweet successful: " + response.statusCode)
         }
-
+    
         else{
             console.log(moment().utc().format() + " Tweet failed. Status code: " + response.statusCode);
         }
-        
     });
-    */
 }
 
 hourlyRankingTweetUpdater();
