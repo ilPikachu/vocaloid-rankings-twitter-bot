@@ -313,8 +313,11 @@ function hourlyRankingTweet(rankingFilePath){
     
 }
 
+function rankingUpdater(){
+    monthlyRankingTweet();
+    weeklyRankingTweet();
+    dailyRankingTweet();
+    hourlyRankingTweetUpdater();
+}
 
-schedule.scheduleJob('6 * * * *', hourlyRankingTweetUpdater);
-schedule.scheduleJob('4 * * * *', dailyRankingTweet);
-schedule.scheduleJob('2 * * * *', weeklyRankingTweet);
-schedule.scheduleJob('0 * * * *', monthlyRankingTweet);
+schedule.scheduleJob('0 * * * *', rankingUpdater);
