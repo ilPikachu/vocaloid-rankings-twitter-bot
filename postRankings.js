@@ -314,7 +314,7 @@ function hourlyRankingTweet(rankingFilePath){
 }
 
 
-schedule.scheduleJob('35 * * * *', hourlyRankingTweetUpdater);
-schedule.scheduleJob('35 * * * *', dailyRankingTweet);
-schedule.scheduleJob('35 * * * *', weeklyRankingTweet);
-schedule.scheduleJob('35 * * * *', monthlyRankingTweet);
+schedule.scheduleJob('3 * * * *', hourlyRankingTweetUpdater);
+schedule.scheduleJob('2 * * * *', dailyRankingTweet);
+schedule.scheduleJob('1 * * * *', weeklyRankingTweet);
+schedule.scheduleJob('0 * * * *', monthlyRankingTweet);
