@@ -6,6 +6,8 @@ const request = require("request");
 const moment = require('moment');
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
+const schedule = require('node-schedule');
+
 
 function hourlyRankingTweetUpdater(){
     let rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
@@ -74,8 +76,7 @@ function getRankingLists(rankingFilePath){
 
 }
 
-function hourlyRankingTweet(rankingFilePath){
-    
+function hourlyRankingTweet(rankingFilePath){  
     let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         let rankingLists = getRankingLists(rankingFilePath);        
@@ -146,5 +147,4 @@ function tweetTitleTruncate(title){
     }
 }
 
-hourlyRankingTweetUpdater();
-setInterval(hourlyRankingTweetUpdater, 60*60*1000);
+schedule.scheduleJob('0 * * * *', hourlyRankingTweetUpdater);
