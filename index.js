@@ -26,24 +26,6 @@ function hourlyRankingTweetUpdater(){
     }
 }
 
-/*
-let file = fs.readFileSync("./rank_data/vocaloid_ranking_2017_12_24_05.html");
-
-const dom = new JSDOM(file);
-
-
-console.log(dom.window.document.getElementById('wrapper')
-            .getElementsByClassName('ranking_cnt clearfix')
-            .item(0)
-            .querySelectorAll('li')
-            .item(1)
-            .getElementsByClassName('box')
-            .item(19)
-            .getElementsByTagName("a")
-            .item(0).href
-);
-*/
-
 function createRankingList(RankingHtmlList){
     let rankingList = {};
     
@@ -57,7 +39,7 @@ function createRankingList(RankingHtmlList){
         rankingList["rank" + String(i + 1)]["thumbnail"] = RankingHtmlList.item(i).getElementsByTagName("img").item(0).src;
     }
     
-    return rankingList
+    return rankingList;
 }
 
 function getRankingLists(rankingFilePath){
@@ -102,9 +84,10 @@ function hourlyRankingTweet(rankingFilePath){
         + "2. " + rankingLists.hourly.rank2.title + "\n" + rankingLists.hourly.rank2.uri + "\n" 
         + "3. " + rankingLists.hourly.rank3.title + "\n" + rankingLists.hourly.rank3.uri;
 
-        console.log(hourlyTweet);
+        console.log(hourlyTweet + "\n");
+        console.log("----------------\n");
 
-        //tweetPostStatUpdate(hourlyTweet);
+        tweetPostStatUpdate(hourlyTweet);
     }
 
     else{
@@ -115,9 +98,10 @@ function hourlyRankingTweet(rankingFilePath){
         + "2. " + rankingLists.hourly.rank2.title + "\n" + rankingLists.hourly.rank2.uri + "\n" 
         + "3. " + rankingLists.hourly.rank3.title + "\n" + rankingLists.hourly.rank3.uri;
 
-        console.log(hourlyTweet);
+        console.log(hourlyTweet + "\n");
+        console.log("----------------\n");        
 
-        //tweetPostStatUpdate(hourlyTweet);
+        tweetPostStatUpdate(hourlyTweet);
     }
     
     
@@ -147,3 +131,4 @@ function tweetPostStatUpdate(message){
 }
 
 hourlyRankingTweetUpdater();
+setInterval(hourlyRankingTweetUpdater, 60*60*1000);
