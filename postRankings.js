@@ -182,9 +182,9 @@ function rankingTweetUpdater(){
             if (response.statusCode === 200){
                 fs.writeFileSync(rankingFilePath, body);
                 monthlyRankingTweet(rankingFilePath);                
-                setTimeout(weeklyRankingTweet,5000,rankingFilePath);
-                setTimeout(dailyRankingTweet,10000,rankingFilePath);                
-                setTimeout(hourlyRankingTweet,15000,rankingFilePath);                                
+                setTimeout((rankingFilePath) => weeklyRankingTweet(rankingFilePath),5000);
+                setTimeout((rankingFilePath) => dailyRankingTweet(rankingFilePath),10000);                
+                setTimeout((rankingFilePath) => hourlyRankingTweet(rankingFilePath),15000);                                
             }
 
             else{
@@ -337,4 +337,4 @@ function hourlyRankingTweet(rankingFilePath){
     
 }
 
-schedule.scheduleJob('14 * * * *', rankingTweetUpdater);
+schedule.scheduleJob('19 * * * *', rankingTweetUpdater);
