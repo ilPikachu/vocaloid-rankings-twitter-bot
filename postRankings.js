@@ -88,7 +88,7 @@ function tweetTitleTruncate(title){
         return title;
     }
 }
-
+/*
 function monthlyRankingTweetUpdater(){
     let rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
     if (!fs.existsSync(rankingFilePath)){
@@ -173,7 +173,31 @@ function hourlyRankingTweetUpdater(){
         hourlyRankingTweet(rankingFilePath);
     }
 }
+*/
 
+function rankingTweetUpdater(){
+    let rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
+    if (!fs.existsSync(rankingFilePath)){
+        request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
+            if (response.statusCode === 200){
+                fs.writeFileSync(rankingFilePath, body);
+                monthlyRankingTweet(rankingFilePath);                
+                weeklyRankingTweet(rankingFilePath);                
+                dailyRankingTweet(rankingFilePath);                
+                hourlyRankingTweet(rankingFilePath);
+            }
+
+            else{
+                console.log(moment().utc().format() + " Ranking page fetch failure. Status code: " + response.statusCode);
+                //retry one more time just incase of network congestion
+                rankingTweetUpdater();
+            }   
+        });
+    }
+    else{
+        hourlyRankingTweet(rankingFilePath);
+    }
+}
 
 function monthlyRankingTweet(rankingFilePath){  
     let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
@@ -313,11 +337,4 @@ function hourlyRankingTweet(rankingFilePath){
     
 }
 
-function rankingUpdater(){
-    monthlyRankingTweet();
-    weeklyRankingTweet();
-    dailyRankingTweet();
-    hourlyRankingTweetUpdater();
-}
-
-schedule.scheduleJob('0 * * * *', rankingUpdater);
+schedule.scheduleJob('2 * * * *', rankingTweetUpdater);
