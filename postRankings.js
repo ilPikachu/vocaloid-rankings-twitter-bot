@@ -88,92 +88,6 @@ function tweetTitleTruncate(title){
         return title;
     }
 }
-/*
-function monthlyRankingTweetUpdater(){
-    let rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
-    if (!fs.existsSync(rankingFilePath)){
-        request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
-            if (response.statusCode === 200){
-                fs.writeFileSync(rankingFilePath, body);
-                monthlyRankingTweet(rankingFilePath);
-            }
-
-            else{
-                console.log(moment().utc().format() + " Ranking page fetch failure. Status code: " + response.statusCode);
-                //retry one more time just incase of network congestion
-                monthlyRankingTweetUpdater();
-            }   
-        });
-    }
-    else{
-        monthlyRankingTweet(rankingFilePath);
-    }
-}
-
-function weeklyRankingTweetUpdater(){
-    //weekly should be done after 5 minutes of daily, ex: every friday 8:05 PM
-    let rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
-    if (!fs.existsSync(rankingFilePath)){
-        request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
-            if (response.statusCode === 200){
-                fs.writeFileSync(rankingFilePath, body);
-                weeklyRankingTweet(rankingFilePath);
-            }
-
-            else{
-                console.log(moment().utc().format() + " Ranking page fetch failure. Status code: " + response.statusCode);
-                //retry one more time just incase of network congestion
-                weeklyRankingTweetUpdater();
-            }   
-        });
-    }
-    else{
-        weeklyRankingTweet(rankingFilePath);
-    }
-}
-
-function dailyRankingTweetUpdater(){
-    let rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
-    if (!fs.existsSync(rankingFilePath)){
-        request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
-            if (response.statusCode === 200){
-                fs.writeFileSync(rankingFilePath, body);
-                dailyRankingTweet(rankingFilePath);
-            }
-
-            else{
-                console.log(moment().utc().format() + " Ranking page fetch failure. Status code: " + response.statusCode);
-                //retry one more time just incase of network congestion
-                dailyRankingTweetUpdater();
-            }   
-        });
-    }
-    else{
-        dailyRankingTweet(rankingFilePath);
-    }
-}
-
-function hourlyRankingTweetUpdater(){
-    let rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
-    if (!fs.existsSync(rankingFilePath)){
-        request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
-            if (response.statusCode === 200){
-                fs.writeFileSync(rankingFilePath, body);
-                hourlyRankingTweet(rankingFilePath);
-            }
-
-            else{
-                console.log(moment().utc().format() + " Ranking page fetch failure. Status code: " + response.statusCode);
-                //retry one more time just incase of network congestion
-                hourlyRankingTweetUpdater();
-            }   
-        });
-    }
-    else{
-        hourlyRankingTweet(rankingFilePath);
-    }
-}
-*/
 
 function rankingTweetUpdater(){
     let rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
@@ -215,7 +129,7 @@ function monthlyRankingTweet(rankingFilePath){
 
         console.log(monthlyTweet + "\n");
 
-        //tweetPostStatUpdate(monthlyTweet);
+        tweetPostStatUpdate(monthlyTweet);
 
         console.log("----------------\n");        
     }
@@ -230,7 +144,7 @@ function monthlyRankingTweet(rankingFilePath){
 
         console.log(monthlyTweet + "\n");
 
-        //tweetPostStatUpdate(monthlyTweet);
+        tweetPostStatUpdate(monthlyTweet);
 
         console.log("----------------\n");               
     }
@@ -249,7 +163,7 @@ function weeklyRankingTweet(rankingFilePath){
 
         console.log(weeklyTweet + "\n");
 
-        //tweetPostStatUpdate(weeklyTweet);
+        tweetPostStatUpdate(weeklyTweet);
 
         console.log("----------------\n");        
     }
@@ -264,7 +178,7 @@ function weeklyRankingTweet(rankingFilePath){
 
         console.log(weeklyTweet + "\n");
 
-        //tweetPostStatUpdate(weeklyTweet);
+        tweetPostStatUpdate(weeklyTweet);
 
         console.log("----------------\n");               
     }
@@ -283,7 +197,7 @@ function dailyRankingTweet(rankingFilePath){
 
         console.log(dailyTweet + "\n");
 
-        //tweetPostStatUpdate(dailyTweet);
+        tweetPostStatUpdate(dailyTweet);
 
         console.log("----------------\n");        
     }
@@ -298,7 +212,7 @@ function dailyRankingTweet(rankingFilePath){
 
         console.log(dailyTweet + "\n");
 
-        //tweetPostStatUpdate(dailyTweet);
+        tweetPostStatUpdate(dailyTweet);
 
         console.log("----------------\n");               
     }
@@ -317,7 +231,7 @@ function hourlyRankingTweet(rankingFilePath){
 
         console.log(hourlyTweet + "\n");
 
-        //tweetPostStatUpdate(hourlyTweet);
+        tweetPostStatUpdate(hourlyTweet);
 
         console.log("----------------\n");        
     }
@@ -332,7 +246,7 @@ function hourlyRankingTweet(rankingFilePath){
 
         console.log(hourlyTweet + "\n");
 
-       //tweetPostStatUpdate(hourlyTweet);
+       tweetPostStatUpdate(hourlyTweet);
 
         console.log("----------------\n");               
     }
@@ -340,4 +254,4 @@ function hourlyRankingTweet(rankingFilePath){
     
 }
 
-schedule.scheduleJob('41 * * * *', rankingTweetUpdater);
+schedule.scheduleJob('0 * * * *', rankingTweetUpdater);
