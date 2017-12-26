@@ -182,9 +182,9 @@ function rankingTweetUpdater(){
             if (response.statusCode === 200){
                 fs.writeFileSync(rankingFilePath, body);
                 monthlyRankingTweet(rankingFilePath);                
-                setTimeout((rankingFilePath) => weeklyRankingTweet(rankingFilePath),5000);
-                setTimeout((rankingFilePath) => dailyRankingTweet(rankingFilePath),10000);                
-                setTimeout((rankingFilePath) => hourlyRankingTweet(rankingFilePath),15000);                                
+                setTimeout((rankingFilePath) => {weeklyRankingTweet(rankingFilePath)},5000);
+                setTimeout((rankingFilePath) => {dailyRankingTweet(rankingFilePath)},10000);                
+                setTimeout((rankingFilePath) => {hourlyRankingTweet(rankingFilePath)},15000);                                
             }
 
             else{
