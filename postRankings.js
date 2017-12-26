@@ -3,10 +3,10 @@
 const Twit = require("twit");
 const fs = require("fs");
 const request = require("request");
-const moment = require('moment');
+const moment = require("moment-timezone");
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
-const schedule = require('node-schedule');
+const schedule = require("node-schedule");
 
 function createRankingList(RankingHtmlList){
     let rankingList = {};
@@ -65,22 +65,25 @@ function tweetPostStatUpdate(message){
     };
     
     let twitUser = new Twit(twitAuth);
-            
+        
+    message = message + '\n' + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH:mm:ss");
+
     twitUser.post("statuses/update", { status: message }, (err, data, response) => {
         if (response.statusCode === 200){
-            console.log("Tweet successful: " + response.statusCode)
+            console.log("Tweet successful: " + response.statusCode);
         }
     
         else{
-            console.log(moment().utc().format() + " Tweet failed. Status code: " + response.statusCode);
+            console.log(moment().utc().format() + " Tweet failed. Status code: " + response.statusCode + " " + response.statusMessage);
+            console.log(data);
         }
     });
 }
 
 function tweetTitleTruncate(title){
-    //truncate within 30 characters, 98 base characters, floor((280 - 98) / 3) / 2 = 30
-    if (title.length > 30){
-        return title.substring(0, 30);
+    //truncate within 27 characters, 98 base characters, 20 time unque string, floor((280 - 98 - 20) / 3) / 2 = 27
+    if (title.length > 27){
+        return title.substring(0, 27);
     }
     else{
         return title;
@@ -250,4 +253,4 @@ function hourlyRankingTweet(rankingFilePath){
     
 }
 
-schedule.scheduleJob('*/5 * * * *', rankingTweetUpdater);
+schedule.scheduleJob('0 * * * *', rankingTweetUpdater);
