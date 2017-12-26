@@ -125,7 +125,7 @@ function monthlyRankingTweet(rankingFilePath){
 
         console.log(monthlyTweet + "\n");
 
-        //tweetPostStatUpdate(monthlyTweet);
+        tweetPostStatUpdate(monthlyTweet);
 
         console.log("----------------\n");        
     }
@@ -140,7 +140,7 @@ function monthlyRankingTweet(rankingFilePath){
 
         console.log(monthlyTweet + "\n");
 
-        //tweetPostStatUpdate(monthlyTweet);
+        tweetPostStatUpdate(monthlyTweet);
 
         console.log("----------------\n");               
     }
@@ -159,7 +159,7 @@ function weeklyRankingTweet(rankingFilePath){
 
         console.log(weeklyTweet + "\n");
 
-        //tweetPostStatUpdate(weeklyTweet);
+        tweetPostStatUpdate(weeklyTweet);
 
         console.log("----------------\n");        
     }
@@ -174,7 +174,7 @@ function weeklyRankingTweet(rankingFilePath){
 
         console.log(weeklyTweet + "\n");
 
-        //tweetPostStatUpdate(weeklyTweet);
+        tweetPostStatUpdate(weeklyTweet);
 
         console.log("----------------\n");               
     }
@@ -193,7 +193,7 @@ function dailyRankingTweet(rankingFilePath){
 
         console.log(dailyTweet + "\n");
 
-        //tweetPostStatUpdate(dailyTweet);
+        tweetPostStatUpdate(dailyTweet);
 
         console.log("----------------\n");        
     }
@@ -208,7 +208,7 @@ function dailyRankingTweet(rankingFilePath){
 
         console.log(dailyTweet + "\n");
 
-        //tweetPostStatUpdate(dailyTweet);
+        tweetPostStatUpdate(dailyTweet);
 
         console.log("----------------\n");               
     }
@@ -227,7 +227,7 @@ function hourlyRankingTweet(rankingFilePath){
 
         console.log(hourlyTweet + "\n");
 
-        //tweetPostStatUpdate(hourlyTweet);
+        tweetPostStatUpdate(hourlyTweet);
 
         console.log("----------------\n");        
     }
@@ -242,7 +242,7 @@ function hourlyRankingTweet(rankingFilePath){
 
         console.log(hourlyTweet + "\n");
 
-        //tweetPostStatUpdate(hourlyTweet);
+        tweetPostStatUpdate(hourlyTweet);
 
         console.log("----------------\n");               
     }
