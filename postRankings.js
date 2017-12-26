@@ -73,8 +73,6 @@ function tweetPostStatUpdate(message){
     
         else{
             console.log(moment().utc().format() + " Tweet failed. Status code: " + response.statusCode);
-            //retry one more time just incase of network congestion
-            tweetPostStatUpdate(message);
         }
     });
 }
@@ -96,23 +94,21 @@ function rankingTweetUpdater(){
             if (response.statusCode === 200){
                 fs.writeFileSync(rankingFilePath, body);
                 monthlyRankingTweet(rankingFilePath);                
-                setTimeout((rankingFilePath) => {weeklyRankingTweet(rankingFilePath)}, 5000);
-                setTimeout((rankingFilePath) => {dailyRankingTweet(rankingFilePath)}, 10000);                
-                setTimeout((rankingFilePath) => {hourlyRankingTweet(rankingFilePath)}, 15000);                                
+                setTimeout((rankingFilePath) => {weeklyRankingTweet(rankingFilePath)}, 60*1000);
+                setTimeout((rankingFilePath) => {dailyRankingTweet(rankingFilePath)}, 2*60*1000);                
+                setTimeout((rankingFilePath) => {hourlyRankingTweet(rankingFilePath)}, 3*60*1000);                                
             }
 
             else{
                 console.log(moment().utc().format() + " Ranking page fetch failure. Status code: " + response.statusCode);
-                //retry one more time just incase of network congestion
-                rankingTweetUpdater();
             }   
         });
     }
     else{
         monthlyRankingTweet(rankingFilePath);                
-        setTimeout((rankingFilePath) => {weeklyRankingTweet(rankingFilePath)}, 5000);
-        setTimeout((rankingFilePath) => {dailyRankingTweet(rankingFilePath)}, 10000);                
-        setTimeout((rankingFilePath) => {hourlyRankingTweet(rankingFilePath)}, 15000);
+        setTimeout((rankingFilePath) => {weeklyRankingTweet(rankingFilePath)}, 60*1000);
+        setTimeout((rankingFilePath) => {dailyRankingTweet(rankingFilePath)}, 2*60*1000);                
+        setTimeout((rankingFilePath) => {hourlyRankingTweet(rankingFilePath)}, 3*60*1000);
     }
 }
 
@@ -129,7 +125,7 @@ function monthlyRankingTweet(rankingFilePath){
 
         console.log(monthlyTweet + "\n");
 
-        tweetPostStatUpdate(monthlyTweet);
+        //tweetPostStatUpdate(monthlyTweet);
 
         console.log("----------------\n");        
     }
@@ -144,7 +140,7 @@ function monthlyRankingTweet(rankingFilePath){
 
         console.log(monthlyTweet + "\n");
 
-        tweetPostStatUpdate(monthlyTweet);
+        //tweetPostStatUpdate(monthlyTweet);
 
         console.log("----------------\n");               
     }
@@ -163,7 +159,7 @@ function weeklyRankingTweet(rankingFilePath){
 
         console.log(weeklyTweet + "\n");
 
-        tweetPostStatUpdate(weeklyTweet);
+        //tweetPostStatUpdate(weeklyTweet);
 
         console.log("----------------\n");        
     }
@@ -178,7 +174,7 @@ function weeklyRankingTweet(rankingFilePath){
 
         console.log(weeklyTweet + "\n");
 
-        tweetPostStatUpdate(weeklyTweet);
+        //tweetPostStatUpdate(weeklyTweet);
 
         console.log("----------------\n");               
     }
@@ -197,7 +193,7 @@ function dailyRankingTweet(rankingFilePath){
 
         console.log(dailyTweet + "\n");
 
-        tweetPostStatUpdate(dailyTweet);
+        //tweetPostStatUpdate(dailyTweet);
 
         console.log("----------------\n");        
     }
@@ -212,7 +208,7 @@ function dailyRankingTweet(rankingFilePath){
 
         console.log(dailyTweet + "\n");
 
-        tweetPostStatUpdate(dailyTweet);
+        //tweetPostStatUpdate(dailyTweet);
 
         console.log("----------------\n");               
     }
@@ -231,7 +227,7 @@ function hourlyRankingTweet(rankingFilePath){
 
         console.log(hourlyTweet + "\n");
 
-        tweetPostStatUpdate(hourlyTweet);
+        //tweetPostStatUpdate(hourlyTweet);
 
         console.log("----------------\n");        
     }
@@ -246,7 +242,7 @@ function hourlyRankingTweet(rankingFilePath){
 
         console.log(hourlyTweet + "\n");
 
-       tweetPostStatUpdate(hourlyTweet);
+        //tweetPostStatUpdate(hourlyTweet);
 
         console.log("----------------\n");               
     }
@@ -254,4 +250,4 @@ function hourlyRankingTweet(rankingFilePath){
     
 }
 
-schedule.scheduleJob('0 * * * *', rankingTweetUpdater);
+schedule.scheduleJob('*/5 * * * *', rankingTweetUpdater);
