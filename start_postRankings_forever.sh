@@ -1,0 +1,1 @@
+forever start -a -l ~/miku_twitter_bot/logs/postRankings_console_logs/postRankings_console.log -o ~/miku_twitter_bot/logs/postRankings_stdout_logs/postRankings_stdout.log -e ~/miku_twitter_bot/logs/postRankings_stderr_logs/postRankings_stderr.log ~/miku_twitter_bot/postRankings.js
