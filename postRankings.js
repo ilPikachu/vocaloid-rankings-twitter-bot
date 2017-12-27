@@ -194,7 +194,7 @@ function rankingPageRequestWithTweetUpdaterRetry(rankingFilePath){
             console.log("Retry Ranking Page File Path: " + rankingFilePath + "\n");
             fs.writeFileSync(rankingFilePath, body);
             monthlyRankingTweet(rankingFilePath);                
-            setTimeout(() => {weeklyRankingTweet(rankingFilePath)}, 1*60*1000);
+            setTimeout(() => {weeklyRankingTweet(rankingFilePath)}, 60*1000);
             setTimeout(() => {dailyRankingTweet(rankingFilePath)}, 2*60*1000);                
             setTimeout(() => {hourlyRankingTweet(rankingFilePath)}, 3*60*1000);                                
         }
@@ -226,7 +226,7 @@ function rankingTweetUpdater(){
             else if (response.statusCode === 200){
                 fs.writeFileSync(rankingFilePath, body);
                 monthlyRankingTweet(rankingFilePath);                
-                setTimeout(() => {weeklyRankingTweet(rankingFilePath)}, 1*60*1000);
+                setTimeout(() => {weeklyRankingTweet(rankingFilePath)}, 60*1000);
                 setTimeout(() => {dailyRankingTweet(rankingFilePath)}, 2*60*1000);                
                 setTimeout(() => {hourlyRankingTweet(rankingFilePath)}, 3*60*1000);                                
             }
@@ -243,7 +243,7 @@ function rankingTweetUpdater(){
     }
     else{
         monthlyRankingTweet(rankingFilePath);                
-        setTimeout(() => {weeklyRankingTweet(rankingFilePath)}, 1*60*1000);
+        setTimeout(() => {weeklyRankingTweet(rankingFilePath)}, 60*1000);
         setTimeout(() => {dailyRankingTweet(rankingFilePath)}, 2*60*1000);                
         setTimeout(() => {hourlyRankingTweet(rankingFilePath)}, 3*60*1000);
     }
