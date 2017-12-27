@@ -423,7 +423,7 @@ function dailyRankingTweet(rankingFilePath){
 
         console.log(dailyTweet + "\n");
 
-        //tweetPostStatUpdate(dailyTweet);
+        tweetPostStatUpdate(dailyTweet);
 
         console.log("----------------\n");               
     }
