@@ -25,10 +25,8 @@ function createRankingList(RankingHtmlList){
 }
 
 function getRankingLists(rankingFilePath){
-    //Error handdling: 1. file may open fail as it may not be exist
     if (fs.existsSync(rankingFilePath)){
         let file = fs.readFileSync(rankingFilePath);  
-        //let file = fs.readFileSync("./rank_data/vocaloid_ranking_2017_12_24_05.html");  //"./rank_data/vocaloid_ranking_2017_12_24_05.html"    
         const dom = new JSDOM(file);
         let rankingLists = dom.window.document.getElementById("wrapper")
                             .getElementsByClassName("ranking_cnt clearfix").item(0)
@@ -84,7 +82,7 @@ function tweetPostStatUpdateRetry(message){
         }
             
         else if (response.statusCode === 200){
-            console.log("Retry Tweet successful: " + response.statusCode);
+            console.log(moment().utc().format() + " Retry Tweet successful: " + response.statusCode + "\n");
         }
         
         else{
@@ -96,9 +94,7 @@ function tweetPostStatUpdateRetry(message){
     });
 }
 
-
 function tweetPostStatUpdate(message){
-    //error handdling: 1. secrets may open fail as it may not be exist 2.twitUser may post fail due to network, retry after sometime
     if (fs.existsSync("./utilities/secrets.json")){
         let secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
         
@@ -119,19 +115,19 @@ function tweetPostStatUpdate(message){
                 console.error(moment().utc().format() + " Tweet failed. Error.");                
                 console.error(error.name);
                 console.error(error.message);
-                setTimeout((message) => {tweetPostStatUpdateRetry(message)}, 60*1000);
+                setTimeout(() => {tweetPostStatUpdateRetry(message)}, 30*1000);
                 console.error('***TweetErrorEnd***\n');
             }
             
             else if (response.statusCode === 200){
-                console.log("Tweet successful: " + response.statusCode);
+                console.log(moment().utc().format() + " Tweet successful: " + response.statusCode + "\n");
             }
         
             else{
                 console.log('***TweetFailureBegin***');                
                 console.log(moment().utc().format() + " Tweet failed. Not 200. Status code: " + response.statusCode + " " + response.statusMessage);
                 console.log(data);
-                setTimeout((message) => {tweetPostStatUpdateRetry(message)}, 60*1000);
+                setTimeout(() => {tweetPostStatUpdateRetry(message)}, 30*1000);
                 console.log('***TweetFailureEnd***\n');                                
             }
         });
@@ -153,25 +149,54 @@ function tweetTitleTruncate(title){
     }
 }
 
+function rankingPageRequestWithSingleTweetRetry(rankingFilePath, callback){
+    request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
+        if (!!error){
+            console.error('***RankingPageRefetchErrorBegin***');
+            console.error(moment().utc().format() + " Refetch Ranking page fetch failure again. Error.");
+            console.error(error.name);
+            console.error(error.message);
+            console.log("Refetch Ranking Page File Path: "+ rankingFilePath);            
+            console.error('***RankingPageRefetchErrorEnd***\n');            
+        }
+
+        else if (response.statusCode === 200){
+            console.log(moment().utc().format() + " Ranking Page Refetch Success");
+            console.log("Refetch Ranking Page File Path: "+ rankingFilePath + "\n");
+            fs.writeFileSync(rankingFilePath, body);
+            callback();                               
+        }
+
+        else{
+            console.log('***RankingPageRefetchFailureBegin***');            
+            console.log(moment().utc().format() + " Refetch Ranking page fetch failure again. Status code: " + response.statusCode + " " + response.statusMessage);
+            console.log("headers: " + response.headers);
+            console.log("body: "+ response.body);
+            console.log("Refetch Ranking Page File Path: "+ rankingFilePath);            
+            console.log('***RankingPageRefetchFailureEnd***\n');            
+        }   
+    });
+}
+
 function rankingPageRequestWithTweetUpdaterRetry(rankingFilePath){
     request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
         if (!!error){
             console.error('***RankingPageRetryErrorBegin***');
-            console.error("Retry Ranking page fetch failure again.");
+            console.error(moment().utc().format() + " Retry Ranking page fetch failure again. Error.");
             console.error(error.name);
             console.error(error.message);
-            console.log(rankingFilePath);            
+            console.log("Retry Ranking Page File Path: " + rankingFilePath);            
             console.error('***RankingPageRetryErrorEnd***\n');            
         }
 
         else if (response.statusCode === 200){
-            console.log("Ranking Page Retry Success");
-            console.log(rankingFilePath);
+            console.log(moment().utc().format() + " Ranking Page Retry Success");
+            console.log("Retry Ranking Page File Path: " + rankingFilePath + "\n");
             fs.writeFileSync(rankingFilePath, body);
-            //monthlyRankingTweet(rankingFilePath);                
-            setTimeout((rankingFilePath) => {weeklyRankingTweet(rankingFilePath)}, 60*1000);
-            setTimeout((rankingFilePath) => {dailyRankingTweet(rankingFilePath)}, 2*60*1000);                
-            setTimeout((rankingFilePath) => {hourlyRankingTweet(rankingFilePath)}, 3*60*1000);                                
+            monthlyRankingTweet(rankingFilePath);                
+            setTimeout(() => {weeklyRankingTweet(rankingFilePath)}, 1*60*1000);
+            setTimeout(() => {dailyRankingTweet(rankingFilePath)}, 2*60*1000);                
+            setTimeout(() => {hourlyRankingTweet(rankingFilePath)}, 3*60*1000);                                
         }
 
         else{
@@ -179,67 +204,93 @@ function rankingPageRequestWithTweetUpdaterRetry(rankingFilePath){
             console.log(moment().utc().format() + " Retry Ranking page fetch failure again. Status code: " + response.statusCode + " " + response.statusMessage);
             console.log("headers: " + response.headers);
             console.log("body: "+ response.body);
+            console.log("Retry Ranking Page File Path: " + rankingFilePath);                        
             console.log('***RankingPageRetryFailureEnd***\n');            
         }   
     });
 }
 
 function rankingTweetUpdater(){
-    //error handling: 1. request maybe fail do few retry after sometime
     let rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
     if (!fs.existsSync(rankingFilePath)){
         request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
             if (!!error){
-                console.error('***RankingPageFetchErrorBegin***');                
+                console.error('***RankingPageFetchErrorBegin***');
+                console.error(moment().utc().format() + " Ranking Page Fetch Failure. Error.");                
                 console.error(error.name);
                 console.error(error.message);
                 console.error('***RankingPageFetchErrorEnd***\n');  
-                let rankingHtmlFilePath = rankingFilePath;                
-                setTimeout((rankingHtmlFilePath) => {rankingPageRequestWithTweetUpdaterRetry(rankingHtmlFilePath)}, 3*1000);
+                setTimeout(() => {rankingPageRequestWithTweetUpdaterRetry(rankingFilePath)}, 1*60*1000);
             }
 
             else if (response.statusCode === 200){
                 fs.writeFileSync(rankingFilePath, body);
-                //monthlyRankingTweet(rankingFilePath);                
-                setTimeout((rankingFilePath) => {weeklyRankingTweet(rankingFilePath)}, 1*1000);
-                setTimeout((rankingFilePath) => {dailyRankingTweet(rankingFilePath)}, 2*60*1000);                
-                setTimeout((rankingFilePath) => {hourlyRankingTweet(rankingFilePath)}, 3*60*1000);                                
+                monthlyRankingTweet(rankingFilePath);                
+                setTimeout(() => {weeklyRankingTweet(rankingFilePath)}, 1*60*1000);
+                setTimeout(() => {dailyRankingTweet(rankingFilePath)}, 2*60*1000);                
+                setTimeout(() => {hourlyRankingTweet(rankingFilePath)}, 3*60*1000);                                
             }
 
             else{
                 console.log('***RankingPageFetchFailureBegin***');                            
-                console.log(moment().utc().format() + " Ranking page fetch failure. Status code: " + response.statusCode + " " + response.statusMessage);
+                console.log(moment().utc().format() + " Ranking Page Fetch Failure. Status code: " + response.statusCode + " " + response.statusMessage);
                 console.log("headers: " + response.headers);
                 console.log("body: "+ response.body);
                 console.log('***RankingPageFetchFailureEnd***\n');                                                            
-                setTimeout((rankingFilePath) => {rankingPageRequestWithTweetUpdaterRetry(rankingFilePath)}, 60*1000);  
+                setTimeout(() => {rankingPageRequestWithTweetUpdaterRetry(rankingFilePath)}, 1*60*1000);  
             }   
         });
     }
     else{
         monthlyRankingTweet(rankingFilePath);                
-        setTimeout((rankingFilePath) => {weeklyRankingTweet(rankingFilePath)}, 60*1000);
-        setTimeout((rankingFilePath) => {dailyRankingTweet(rankingFilePath)}, 2*60*1000);                
-        setTimeout((rankingFilePath) => {hourlyRankingTweet(rankingFilePath)}, 3*60*1000);
+        setTimeout(() => {weeklyRankingTweet(rankingFilePath)}, 1*60*1000);
+        setTimeout(() => {dailyRankingTweet(rankingFilePath)}, 2*60*1000);                
+        setTimeout(() => {hourlyRankingTweet(rankingFilePath)}, 3*60*1000);
     }
 }
 
 function monthlyRankingTweet(rankingFilePath){
     let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
-        let rankingLists = getRankingLists(rankingFilePath);        
-        fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+        try{
+            let rankingLists = getRankingLists(rankingFilePath); 
+            if (rankingLists instanceof Error){
+                throw(rankingLists);
+            }           
+            fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
 
-        let monthlyTweet = "月間ランキング\n" 
-        + "1. " + tweetTitleTruncate(rankingLists.monthly.rank1.title) + "\n" + rankingLists.monthly.rank1.uri + "\n" 
-        + "2. " + tweetTitleTruncate(rankingLists.monthly.rank2.title) + "\n" + rankingLists.monthly.rank2.uri + "\n" 
-        + "3. " + tweetTitleTruncate(rankingLists.monthly.rank3.title) + "\n" + rankingLists.monthly.rank3.uri;
+            let monthlyTweet = "月間ランキング\n" 
+            + "1. " + tweetTitleTruncate(rankingLists.monthly.rank1.title) + "\n" + rankingLists.monthly.rank1.uri + "\n" 
+            + "2. " + tweetTitleTruncate(rankingLists.monthly.rank2.title) + "\n" + rankingLists.monthly.rank2.uri + "\n" 
+            + "3. " + tweetTitleTruncate(rankingLists.monthly.rank3.title) + "\n" + rankingLists.monthly.rank3.uri;
 
-        console.log(monthlyTweet + "\n");
+            console.log(monthlyTweet + "\n");
 
-        tweetPostStatUpdate(monthlyTweet);
+            tweetPostStatUpdate(monthlyTweet);
 
-        console.log("----------------\n");        
+            console.log("----------------\n");    
+        }    
+        catch(error){
+            console.error(error.message);
+            rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
+                let rankingLists = getRankingLists(rankingFilePath); 
+                if (rankingLists instanceof Error){
+                    throw(rankingLists);
+                }           
+                fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+    
+                let monthlyTweet = "月間ランキング\n" 
+                + "1. " + tweetTitleTruncate(rankingLists.monthly.rank1.title) + "\n" + rankingLists.monthly.rank1.uri + "\n" 
+                + "2. " + tweetTitleTruncate(rankingLists.monthly.rank2.title) + "\n" + rankingLists.monthly.rank2.uri + "\n" 
+                + "3. " + tweetTitleTruncate(rankingLists.monthly.rank3.title) + "\n" + rankingLists.monthly.rank3.uri;
+    
+                console.log(monthlyTweet + "\n");
+    
+                tweetPostStatUpdate(monthlyTweet);
+    
+                console.log("----------------\n"); 
+            });           
+        }
     }
 
     else{
@@ -261,19 +312,45 @@ function monthlyRankingTweet(rankingFilePath){
 function weeklyRankingTweet(rankingFilePath){  
     let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
-        let rankingLists = getRankingLists(rankingFilePath);        
-        fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+        try{
+            let rankingLists = getRankingLists(rankingFilePath);
+            if (rankingLists instanceof Error){
+                throw(rankingLists);
+            }        
+            fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
 
-        let weeklyTweet = "週間ランキング\n" 
-        + "1. " + tweetTitleTruncate(rankingLists.weekly.rank1.title) + "\n" + rankingLists.weekly.rank1.uri + "\n" 
-        + "2. " + tweetTitleTruncate(rankingLists.weekly.rank2.title) + "\n" + rankingLists.weekly.rank2.uri + "\n" 
-        + "3. " + tweetTitleTruncate(rankingLists.weekly.rank3.title) + "\n" + rankingLists.weekly.rank3.uri;
+            let weeklyTweet = "週間ランキング\n" 
+            + "1. " + tweetTitleTruncate(rankingLists.weekly.rank1.title) + "\n" + rankingLists.weekly.rank1.uri + "\n" 
+            + "2. " + tweetTitleTruncate(rankingLists.weekly.rank2.title) + "\n" + rankingLists.weekly.rank2.uri + "\n" 
+            + "3. " + tweetTitleTruncate(rankingLists.weekly.rank3.title) + "\n" + rankingLists.weekly.rank3.uri;
 
-        console.log(weeklyTweet + "\n");
+            console.log(weeklyTweet + "\n");
 
-        tweetPostStatUpdate(weeklyTweet);
+            tweetPostStatUpdate(weeklyTweet);
 
-        console.log("----------------\n");        
+            console.log("----------------\n");
+        }
+        catch(error){
+            console.error(error.message);
+            rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
+                let rankingLists = getRankingLists(rankingFilePath);
+                if (rankingLists instanceof Error){
+                    throw(rankingLists);
+                }         
+                fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+    
+                let weeklyTweet = "週間ランキング\n" 
+                + "1. " + tweetTitleTruncate(rankingLists.weekly.rank1.title) + "\n" + rankingLists.weekly.rank1.uri + "\n" 
+                + "2. " + tweetTitleTruncate(rankingLists.weekly.rank2.title) + "\n" + rankingLists.weekly.rank2.uri + "\n" 
+                + "3. " + tweetTitleTruncate(rankingLists.weekly.rank3.title) + "\n" + rankingLists.weekly.rank3.uri;
+    
+                console.log(weeklyTweet + "\n");
+    
+                tweetPostStatUpdate(weeklyTweet);
+    
+                console.log("----------------\n");
+            });
+        }        
     }
 
     else{
@@ -295,19 +372,45 @@ function weeklyRankingTweet(rankingFilePath){
 function dailyRankingTweet(rankingFilePath){ 
     let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
-        let rankingLists = getRankingLists(rankingFilePath);        
-        fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+        try{
+            let rankingLists = getRankingLists(rankingFilePath);
+            if (rankingLists instanceof Error){
+                throw(rankingLists);
+            }         
+            fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
 
-        let dailyTweet = "24時間ランキング\n" 
-        + "1. " + tweetTitleTruncate(rankingLists.daily.rank1.title) + "\n" + rankingLists.daily.rank1.uri + "\n" 
-        + "2. " + tweetTitleTruncate(rankingLists.daily.rank2.title) + "\n" + rankingLists.daily.rank2.uri + "\n" 
-        + "3. " + tweetTitleTruncate(rankingLists.daily.rank3.title) + "\n" + rankingLists.daily.rank3.uri;
+            let dailyTweet = "24時間ランキング\n" 
+            + "1. " + tweetTitleTruncate(rankingLists.daily.rank1.title) + "\n" + rankingLists.daily.rank1.uri + "\n" 
+            + "2. " + tweetTitleTruncate(rankingLists.daily.rank2.title) + "\n" + rankingLists.daily.rank2.uri + "\n" 
+            + "3. " + tweetTitleTruncate(rankingLists.daily.rank3.title) + "\n" + rankingLists.daily.rank3.uri;
 
-        console.log(dailyTweet + "\n");
+            console.log(dailyTweet + "\n");
 
-        tweetPostStatUpdate(dailyTweet);
+            tweetPostStatUpdate(dailyTweet);
 
-        console.log("----------------\n");        
+            console.log("----------------\n");
+        }
+        catch(error){
+            console.error(error.message);
+            rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
+                let rankingLists = getRankingLists(rankingFilePath);
+                if (rankingLists instanceof Error){
+                    throw(rankingLists);
+                }         
+                fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+    
+                let dailyTweet = "24時間ランキング\n" 
+                + "1. " + tweetTitleTruncate(rankingLists.daily.rank1.title) + "\n" + rankingLists.daily.rank1.uri + "\n" 
+                + "2. " + tweetTitleTruncate(rankingLists.daily.rank2.title) + "\n" + rankingLists.daily.rank2.uri + "\n" 
+                + "3. " + tweetTitleTruncate(rankingLists.daily.rank3.title) + "\n" + rankingLists.daily.rank3.uri;
+    
+                console.log(dailyTweet + "\n");
+    
+                tweetPostStatUpdate(dailyTweet);
+    
+                console.log("----------------\n");
+            });
+        }        
     }
 
     else{
@@ -320,7 +423,7 @@ function dailyRankingTweet(rankingFilePath){
 
         console.log(dailyTweet + "\n");
 
-        tweetPostStatUpdate(dailyTweet);
+        //tweetPostStatUpdate(dailyTweet);
 
         console.log("----------------\n");               
     }
@@ -329,19 +432,45 @@ function dailyRankingTweet(rankingFilePath){
 function hourlyRankingTweet(rankingFilePath){
     let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
-        let rankingLists = getRankingLists(rankingFilePath);        
-        fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+        try{
+            let rankingLists = getRankingLists(rankingFilePath);
+            if (rankingLists instanceof Error){
+                throw(rankingLists);
+            }
+            fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
 
-        let hourlyTweet = "毎時ランキング\n" 
-        + "1. " + tweetTitleTruncate(rankingLists.hourly.rank1.title) + "\n" + rankingLists.hourly.rank1.uri + "\n" 
-        + "2. " + tweetTitleTruncate(rankingLists.hourly.rank2.title) + "\n" + rankingLists.hourly.rank2.uri + "\n" 
-        + "3. " + tweetTitleTruncate(rankingLists.hourly.rank3.title) + "\n" + rankingLists.hourly.rank3.uri;
+            let hourlyTweet = "毎時ランキング\n" 
+            + "1. " + tweetTitleTruncate(rankingLists.hourly.rank1.title) + "\n" + rankingLists.hourly.rank1.uri + "\n" 
+            + "2. " + tweetTitleTruncate(rankingLists.hourly.rank2.title) + "\n" + rankingLists.hourly.rank2.uri + "\n" 
+            + "3. " + tweetTitleTruncate(rankingLists.hourly.rank3.title) + "\n" + rankingLists.hourly.rank3.uri;
 
-        console.log(hourlyTweet + "\n");
+            console.log(hourlyTweet + "\n");
 
-        tweetPostStatUpdate(hourlyTweet);
+            tweetPostStatUpdate(hourlyTweet);
 
-        console.log("----------------\n");        
+            console.log("----------------\n");
+        }
+        catch (error){
+            console.error(error.message);
+            rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
+                let rankingLists = getRankingLists(rankingFilePath);
+                if (rankingLists instanceof Error){
+                    throw(rankingLists);
+                }
+                fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+    
+                let hourlyTweet = "毎時ランキング\n" 
+                + "1. " + tweetTitleTruncate(rankingLists.hourly.rank1.title) + "\n" + rankingLists.hourly.rank1.uri + "\n" 
+                + "2. " + tweetTitleTruncate(rankingLists.hourly.rank2.title) + "\n" + rankingLists.hourly.rank2.uri + "\n" 
+                + "3. " + tweetTitleTruncate(rankingLists.hourly.rank3.title) + "\n" + rankingLists.hourly.rank3.uri;
+    
+                console.log(hourlyTweet + "\n");
+    
+                tweetPostStatUpdate(hourlyTweet);
+    
+                console.log("----------------\n");
+            });
+        }        
     }
 
     else{
@@ -358,15 +487,7 @@ function hourlyRankingTweet(rankingFilePath){
 
         console.log("----------------\n");               
     }
-    
-    
 }
 
-try{
-    schedule.scheduleJob('20 * * * *', rankingTweetUpdater);
-    rankingTweetUpdater();
-}
-catch(error){
-    console.error(error.message);
-    return 1;
-}
+
+schedule.scheduleJob('0 * * * *', rankingTweetUpdater);
