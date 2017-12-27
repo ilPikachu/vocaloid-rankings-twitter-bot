@@ -61,7 +61,7 @@ function getRankingLists(rankingFilePath){
 }
 
 function tweetPostStatUpdateRetry(message){
-    let secrets = JSON.parse(fs.readFileSync("~/miku_twitter_bot/utilities/secrets.json"));
+    let secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
         
     let twitAuth = {
         consumer_key:         secrets.twitter.consumer_key,
@@ -211,7 +211,7 @@ function rankingPageRequestWithTweetUpdaterRetry(rankingFilePath){
 }
 
 function rankingTweetUpdater(){
-    let rankingFilePath = "~/miku_twitter_bot/rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
+    let rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
     if (!fs.existsSync(rankingFilePath)){
         request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
             if (!!error){
@@ -250,7 +250,7 @@ function rankingTweetUpdater(){
 }
 
 function monthlyRankingTweet(rankingFilePath){
-    let processedRankingFilePath = "~/miku_twitter_bot/rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
+    let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
             let rankingLists = getRankingLists(rankingFilePath); 
@@ -310,7 +310,7 @@ function monthlyRankingTweet(rankingFilePath){
 }
 
 function weeklyRankingTweet(rankingFilePath){  
-    let processedRankingFilePath = "~/miku_twitter_bot/rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
+    let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
             let rankingLists = getRankingLists(rankingFilePath);
@@ -370,7 +370,7 @@ function weeklyRankingTweet(rankingFilePath){
 }
 
 function dailyRankingTweet(rankingFilePath){ 
-    let processedRankingFilePath = "~/miku_twitter_bot/rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
+    let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
             let rankingLists = getRankingLists(rankingFilePath);
@@ -430,7 +430,7 @@ function dailyRankingTweet(rankingFilePath){
 }
 
 function hourlyRankingTweet(rankingFilePath){
-    let processedRankingFilePath = "~/miku_twitter_bot/rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
+    let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
             let rankingLists = getRankingLists(rankingFilePath);
@@ -491,3 +491,4 @@ function hourlyRankingTweet(rankingFilePath){
 
 
 schedule.scheduleJob('0 * * * *', rankingTweetUpdater);
+rankingTweetUpdater();
