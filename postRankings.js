@@ -491,4 +491,3 @@ function hourlyRankingTweet(rankingFilePath){
 
 
 schedule.scheduleJob('0 * * * *', rankingTweetUpdater);
-rankingTweetUpdater();
