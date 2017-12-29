@@ -257,7 +257,7 @@ function monthlyRankingTweet(rankingFilePath){
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }           
-            fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+            fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
 
             let monthlyTweet = "月間ランキング\n" 
             + "1. " + tweetTitleTruncate(rankingLists.monthly.rank1.title) + "\n" + rankingLists.monthly.rank1.uri + "\n" 
@@ -277,7 +277,7 @@ function monthlyRankingTweet(rankingFilePath){
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }           
-                fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+                fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
     
                 let monthlyTweet = "月間ランキング\n" 
                 + "1. " + tweetTitleTruncate(rankingLists.monthly.rank1.title) + "\n" + rankingLists.monthly.rank1.uri + "\n" 
@@ -317,7 +317,7 @@ function weeklyRankingTweet(rankingFilePath){
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }        
-            fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+            fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
 
             let weeklyTweet = "週間ランキング\n" 
             + "1. " + tweetTitleTruncate(rankingLists.weekly.rank1.title) + "\n" + rankingLists.weekly.rank1.uri + "\n" 
@@ -337,7 +337,7 @@ function weeklyRankingTweet(rankingFilePath){
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }         
-                fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+                fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
     
                 let weeklyTweet = "週間ランキング\n" 
                 + "1. " + tweetTitleTruncate(rankingLists.weekly.rank1.title) + "\n" + rankingLists.weekly.rank1.uri + "\n" 
@@ -377,7 +377,7 @@ function dailyRankingTweet(rankingFilePath){
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }         
-            fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+            fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
 
             let dailyTweet = "24時間ランキング\n" 
             + "1. " + tweetTitleTruncate(rankingLists.daily.rank1.title) + "\n" + rankingLists.daily.rank1.uri + "\n" 
@@ -397,7 +397,7 @@ function dailyRankingTweet(rankingFilePath){
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }         
-                fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+                fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
     
                 let dailyTweet = "24時間ランキング\n" 
                 + "1. " + tweetTitleTruncate(rankingLists.daily.rank1.title) + "\n" + rankingLists.daily.rank1.uri + "\n" 
@@ -437,7 +437,7 @@ function hourlyRankingTweet(rankingFilePath){
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }
-            fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+            fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
 
             let hourlyTweet = "毎時ランキング\n" 
             + "1. " + tweetTitleTruncate(rankingLists.hourly.rank1.title) + "\n" + rankingLists.hourly.rank1.uri + "\n" 
@@ -457,7 +457,7 @@ function hourlyRankingTweet(rankingFilePath){
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }
-                fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists));
+                fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
     
                 let hourlyTweet = "毎時ランキング\n" 
                 + "1. " + tweetTitleTruncate(rankingLists.hourly.rank1.title) + "\n" + rankingLists.hourly.rank1.uri + "\n" 
