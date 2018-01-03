@@ -4,23 +4,23 @@ const Twit = require("twit");
 const fs = require("fs");
 const moment = require("moment-timezone");
 
-let secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
+const secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
 
-let twitAuth = {
+const twitAuth = {
     consumer_key:         secrets.twitter.consumer_key,
     consumer_secret:      secrets.twitter.consumer_secret,
     access_token:         secrets.twitter.access_token,
     access_token_secret:  secrets.twitter.access_token_secret
 };
 
-let twitUser = new Twit(twitAuth);
+const twitUser = new Twit(twitAuth);
 
-let stream = twitUser.stream("user");
+const stream = twitUser.stream("user");
 
 stream.on("follow", followBack);
 
 function followBack(event){
-    let screenName = event.source.screen_name;
+    const screenName = event.source.screen_name;
     if (screenName !== "mikuchan_info"){ 
         console.log( screenName + " has followed the bot.\n");
         twitUser.post("friendships/create", {screen_name: screenName}, (error, data, response) => {

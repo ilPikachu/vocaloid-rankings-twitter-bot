@@ -9,7 +9,7 @@ const { JSDOM } = jsdom;
 const schedule = require("node-schedule");
 
 function createRankingList(RankingHtmlList){
-    let rankingList = {};
+    const rankingList = {};
     
     for (let i = 0; i < RankingHtmlList.length; i++){
         rankingList["rank" + String(i + 1)] = {};
@@ -26,23 +26,23 @@ function createRankingList(RankingHtmlList){
 
 function getRankingLists(rankingFilePath){
     if (fs.existsSync(rankingFilePath)){
-        let file = fs.readFileSync(rankingFilePath);  
+        const file = fs.readFileSync(rankingFilePath);  
         const dom = new JSDOM(file);
-        let rankingLists = dom.window.document.getElementById("wrapper")
+        const rankingHtmlLists = dom.window.document.getElementById("wrapper")
                             .getElementsByClassName("ranking_cnt clearfix").item(0)
                             .querySelectorAll("li");    
         
-        let hourlyRankingHtmlList = rankingLists.item(0).getElementsByClassName("box");
-        let dailyRankingHtmlList = rankingLists.item(1).getElementsByClassName("box");
-        let weeklyRankingHtmlList = rankingLists.item(2).getElementsByClassName("box");
-        let monthlyRankingHtmlList = rankingLists.item(3).getElementsByClassName("box");
+        const hourlyRankingHtmlList = rankingHtmlLists.item(0).getElementsByClassName("box");
+        const dailyRankingHtmlList = rankingHtmlLists.item(1).getElementsByClassName("box");
+        const weeklyRankingHtmlList = rankingHtmlLists.item(2).getElementsByClassName("box");
+        const monthlyRankingHtmlList = rankingHtmlLists.item(3).getElementsByClassName("box");
 
-        let hourlyRankingList = createRankingList(hourlyRankingHtmlList);
-        let dailyRankingList = createRankingList(dailyRankingHtmlList);
-        let weeklyRankingList = createRankingList(weeklyRankingHtmlList);
-        let monthlyRankingList = createRankingList(monthlyRankingHtmlList);
+        const hourlyRankingList = createRankingList(hourlyRankingHtmlList);
+        const dailyRankingList = createRankingList(dailyRankingHtmlList);
+        const weeklyRankingList = createRankingList(weeklyRankingHtmlList);
+        const monthlyRankingList = createRankingList(monthlyRankingHtmlList);
         
-        rankingLists = {
+        const rankingLists = {
             "hourly": hourlyRankingList,
             "daily": dailyRankingList,
             "weekly": weeklyRankingList,
@@ -54,23 +54,23 @@ function getRankingLists(rankingFilePath){
     }
     
     else {
-        let error = new Error(String(rankingFilePath) + " does not exist!");
+        const error = new Error(String(rankingFilePath) + " does not exist!");
         return error;
     }
 
 }
 
 function tweetPostStatUpdateRetry(message){
-    let secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
+    const secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
         
-    let twitAuth = {
+    const twitAuth = {
         consumer_key:         secrets.twitter.consumer_key,
         consumer_secret:      secrets.twitter.consumer_secret,
         access_token:         secrets.twitter.access_token,
         access_token_secret:  secrets.twitter.access_token_secret
     };
         
-    let twitUser = new Twit(twitAuth);
+    const twitUser = new Twit(twitAuth);
     
     twitUser.post("statuses/update", { status: message }, (error, data, response) => {
         if (!!error){
@@ -96,19 +96,17 @@ function tweetPostStatUpdateRetry(message){
 
 function tweetPostStatUpdate(message){
     if (fs.existsSync("./utilities/secrets.json")){
-        let secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
+        const secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
         
-        let twitAuth = {
+        const twitAuth = {
             consumer_key:         secrets.twitter.consumer_key,
             consumer_secret:      secrets.twitter.consumer_secret,
             access_token:         secrets.twitter.access_token,
             access_token_secret:  secrets.twitter.access_token_secret
         };
         
-        let twitUser = new Twit(twitAuth);
+        const twitUser = new Twit(twitAuth);
             
-        message = message + '\n' + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
-
         twitUser.post("statuses/update", { status: message }, (error, data, response) => {
             if (!!error){
                 console.error('***TweetErrorBegin***');
@@ -134,7 +132,7 @@ function tweetPostStatUpdate(message){
     }
 
     else{
-        let error = new Error("./utilities/secrets.json does not exist");
+        const error = new Error("./utilities/secrets.json does not exist");
         return error;
     }
 }
@@ -211,7 +209,7 @@ function rankingPageRequestWithTweetUpdaterRetry(rankingFilePath){
 }
 
 function rankingTweetUpdater(){
-    let rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
+    const rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
     if (!fs.existsSync(rankingFilePath)){
         request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
             if (!!error){
@@ -250,19 +248,20 @@ function rankingTweetUpdater(){
 }
 
 function monthlyRankingTweet(rankingFilePath){
-    let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
+    const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
-            let rankingLists = getRankingLists(rankingFilePath); 
+            const rankingLists = getRankingLists(rankingFilePath); 
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }           
             fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
 
-            let monthlyTweet = "月間ランキング\n" 
+            const monthlyTweet = "月間ランキング\n" 
             + "1. " + tweetTitleTruncate(rankingLists.monthly.rank1.title) + "\n" + rankingLists.monthly.rank1.uri + "\n" 
             + "2. " + tweetTitleTruncate(rankingLists.monthly.rank2.title) + "\n" + rankingLists.monthly.rank2.uri + "\n" 
-            + "3. " + tweetTitleTruncate(rankingLists.monthly.rank3.title) + "\n" + rankingLists.monthly.rank3.uri;
+            + "3. " + tweetTitleTruncate(rankingLists.monthly.rank3.title) + "\n" + rankingLists.monthly.rank3.uri + '\n'
+            + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
 
             console.log(monthlyTweet + "\n");
 
@@ -273,16 +272,17 @@ function monthlyRankingTweet(rankingFilePath){
         catch(error){
             console.error(error.message);
             rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
-                let rankingLists = getRankingLists(rankingFilePath); 
+                const rankingLists = getRankingLists(rankingFilePath); 
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }           
                 fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
     
-                let monthlyTweet = "月間ランキング\n" 
+                const monthlyTweet = "月間ランキング\n" 
                 + "1. " + tweetTitleTruncate(rankingLists.monthly.rank1.title) + "\n" + rankingLists.monthly.rank1.uri + "\n" 
                 + "2. " + tweetTitleTruncate(rankingLists.monthly.rank2.title) + "\n" + rankingLists.monthly.rank2.uri + "\n" 
-                + "3. " + tweetTitleTruncate(rankingLists.monthly.rank3.title) + "\n" + rankingLists.monthly.rank3.uri;
+                + "3. " + tweetTitleTruncate(rankingLists.monthly.rank3.title) + "\n" + rankingLists.monthly.rank3.uri + '\n'
+                + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
     
                 console.log(monthlyTweet + "\n");
     
@@ -294,12 +294,13 @@ function monthlyRankingTweet(rankingFilePath){
     }
 
     else{
-        let rankingLists = JSON.parse(fs.readFileSync(processedRankingFilePath));
+        const rankingLists = JSON.parse(fs.readFileSync(processedRankingFilePath));
 
-        let monthlyTweet = "月間ランキング\n" 
+        const monthlyTweet = "月間ランキング\n" 
         + "1. " + tweetTitleTruncate(rankingLists.monthly.rank1.title) + "\n" + rankingLists.monthly.rank1.uri + "\n" 
         + "2. " + tweetTitleTruncate(rankingLists.monthly.rank2.title) + "\n" + rankingLists.monthly.rank2.uri + "\n" 
-        + "3. " + tweetTitleTruncate(rankingLists.monthly.rank3.title) + "\n" + rankingLists.monthly.rank3.uri;
+        + "3. " + tweetTitleTruncate(rankingLists.monthly.rank3.title) + "\n" + rankingLists.monthly.rank3.uri + '\n'
+        + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
 
         console.log(monthlyTweet + "\n");
 
@@ -310,19 +311,20 @@ function monthlyRankingTweet(rankingFilePath){
 }
 
 function weeklyRankingTweet(rankingFilePath){  
-    let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
+    const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
-            let rankingLists = getRankingLists(rankingFilePath);
+            const rankingLists = getRankingLists(rankingFilePath);
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }        
             fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
 
-            let weeklyTweet = "週間ランキング\n" 
+            const weeklyTweet = "週間ランキング\n" 
             + "1. " + tweetTitleTruncate(rankingLists.weekly.rank1.title) + "\n" + rankingLists.weekly.rank1.uri + "\n" 
             + "2. " + tweetTitleTruncate(rankingLists.weekly.rank2.title) + "\n" + rankingLists.weekly.rank2.uri + "\n" 
-            + "3. " + tweetTitleTruncate(rankingLists.weekly.rank3.title) + "\n" + rankingLists.weekly.rank3.uri;
+            + "3. " + tweetTitleTruncate(rankingLists.weekly.rank3.title) + "\n" + rankingLists.weekly.rank3.uri + '\n'
+            + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
 
             console.log(weeklyTweet + "\n");
 
@@ -333,16 +335,17 @@ function weeklyRankingTweet(rankingFilePath){
         catch(error){
             console.error(error.message);
             rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
-                let rankingLists = getRankingLists(rankingFilePath);
+                const rankingLists = getRankingLists(rankingFilePath);
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }         
                 fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
     
-                let weeklyTweet = "週間ランキング\n" 
+                const weeklyTweet = "週間ランキング\n" 
                 + "1. " + tweetTitleTruncate(rankingLists.weekly.rank1.title) + "\n" + rankingLists.weekly.rank1.uri + "\n" 
                 + "2. " + tweetTitleTruncate(rankingLists.weekly.rank2.title) + "\n" + rankingLists.weekly.rank2.uri + "\n" 
-                + "3. " + tweetTitleTruncate(rankingLists.weekly.rank3.title) + "\n" + rankingLists.weekly.rank3.uri;
+                + "3. " + tweetTitleTruncate(rankingLists.weekly.rank3.title) + "\n" + rankingLists.weekly.rank3.uri + '\n'
+                + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
     
                 console.log(weeklyTweet + "\n");
     
@@ -354,12 +357,13 @@ function weeklyRankingTweet(rankingFilePath){
     }
 
     else{
-        let rankingLists = JSON.parse(fs.readFileSync(processedRankingFilePath));
+        const rankingLists = JSON.parse(fs.readFileSync(processedRankingFilePath));
 
-        let weeklyTweet = "週間ランキング\n" 
+        const weeklyTweet = "週間ランキング\n" 
         + "1. " + tweetTitleTruncate(rankingLists.weekly.rank1.title) + "\n" + rankingLists.weekly.rank1.uri + "\n" 
         + "2. " + tweetTitleTruncate(rankingLists.weekly.rank2.title) + "\n" + rankingLists.weekly.rank2.uri + "\n" 
-        + "3. " + tweetTitleTruncate(rankingLists.weekly.rank3.title) + "\n" + rankingLists.weekly.rank3.uri;
+        + "3. " + tweetTitleTruncate(rankingLists.weekly.rank3.title) + "\n" + rankingLists.weekly.rank3.uri + '\n'
+        + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
 
         console.log(weeklyTweet + "\n");
 
@@ -370,19 +374,20 @@ function weeklyRankingTweet(rankingFilePath){
 }
 
 function dailyRankingTweet(rankingFilePath){ 
-    let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
+    const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
-            let rankingLists = getRankingLists(rankingFilePath);
+            const rankingLists = getRankingLists(rankingFilePath);
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }         
             fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
 
-            let dailyTweet = "24時間ランキング\n" 
+            const dailyTweet = "24時間ランキング\n" 
             + "1. " + tweetTitleTruncate(rankingLists.daily.rank1.title) + "\n" + rankingLists.daily.rank1.uri + "\n" 
             + "2. " + tweetTitleTruncate(rankingLists.daily.rank2.title) + "\n" + rankingLists.daily.rank2.uri + "\n" 
-            + "3. " + tweetTitleTruncate(rankingLists.daily.rank3.title) + "\n" + rankingLists.daily.rank3.uri;
+            + "3. " + tweetTitleTruncate(rankingLists.daily.rank3.title) + "\n" + rankingLists.daily.rank3.uri + '\n'
+            + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
 
             console.log(dailyTweet + "\n");
 
@@ -393,16 +398,17 @@ function dailyRankingTweet(rankingFilePath){
         catch(error){
             console.error(error.message);
             rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
-                let rankingLists = getRankingLists(rankingFilePath);
+                const rankingLists = getRankingLists(rankingFilePath);
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }         
                 fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
     
-                let dailyTweet = "24時間ランキング\n" 
+                const dailyTweet = "24時間ランキング\n" 
                 + "1. " + tweetTitleTruncate(rankingLists.daily.rank1.title) + "\n" + rankingLists.daily.rank1.uri + "\n" 
                 + "2. " + tweetTitleTruncate(rankingLists.daily.rank2.title) + "\n" + rankingLists.daily.rank2.uri + "\n" 
-                + "3. " + tweetTitleTruncate(rankingLists.daily.rank3.title) + "\n" + rankingLists.daily.rank3.uri;
+                + "3. " + tweetTitleTruncate(rankingLists.daily.rank3.title) + "\n" + rankingLists.daily.rank3.uri + '\n'
+                + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
     
                 console.log(dailyTweet + "\n");
     
@@ -414,12 +420,13 @@ function dailyRankingTweet(rankingFilePath){
     }
 
     else{
-        let rankingLists = JSON.parse(fs.readFileSync(processedRankingFilePath));
+        const rankingLists = JSON.parse(fs.readFileSync(processedRankingFilePath));
 
-        let dailyTweet = "24時間ランキング\n" 
+        const dailyTweet = "24時間ランキング\n" 
         + "1. " + tweetTitleTruncate(rankingLists.daily.rank1.title) + "\n" + rankingLists.daily.rank1.uri + "\n" 
         + "2. " + tweetTitleTruncate(rankingLists.daily.rank2.title) + "\n" + rankingLists.daily.rank2.uri + "\n" 
-        + "3. " + tweetTitleTruncate(rankingLists.daily.rank3.title) + "\n" + rankingLists.daily.rank3.uri;
+        + "3. " + tweetTitleTruncate(rankingLists.daily.rank3.title) + "\n" + rankingLists.daily.rank3.uri + '\n'
+        + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
 
         console.log(dailyTweet + "\n");
 
@@ -430,19 +437,20 @@ function dailyRankingTweet(rankingFilePath){
 }
 
 function hourlyRankingTweet(rankingFilePath){
-    let processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
+    const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
-            let rankingLists = getRankingLists(rankingFilePath);
+            const rankingLists = getRankingLists(rankingFilePath);
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }
             fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
 
-            let hourlyTweet = "毎時ランキング\n" 
+            const hourlyTweet = "毎時ランキング\n" 
             + "1. " + tweetTitleTruncate(rankingLists.hourly.rank1.title) + "\n" + rankingLists.hourly.rank1.uri + "\n" 
             + "2. " + tweetTitleTruncate(rankingLists.hourly.rank2.title) + "\n" + rankingLists.hourly.rank2.uri + "\n" 
-            + "3. " + tweetTitleTruncate(rankingLists.hourly.rank3.title) + "\n" + rankingLists.hourly.rank3.uri;
+            + "3. " + tweetTitleTruncate(rankingLists.hourly.rank3.title) + "\n" + rankingLists.hourly.rank3.uri + '\n'
+            + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
 
             console.log(hourlyTweet + "\n");
 
@@ -453,16 +461,17 @@ function hourlyRankingTweet(rankingFilePath){
         catch (error){
             console.error(error.message);
             rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
-                let rankingLists = getRankingLists(rankingFilePath);
+                const rankingLists = getRankingLists(rankingFilePath);
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }
                 fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
     
-                let hourlyTweet = "毎時ランキング\n" 
+                const hourlyTweet = "毎時ランキング\n" 
                 + "1. " + tweetTitleTruncate(rankingLists.hourly.rank1.title) + "\n" + rankingLists.hourly.rank1.uri + "\n" 
                 + "2. " + tweetTitleTruncate(rankingLists.hourly.rank2.title) + "\n" + rankingLists.hourly.rank2.uri + "\n" 
-                + "3. " + tweetTitleTruncate(rankingLists.hourly.rank3.title) + "\n" + rankingLists.hourly.rank3.uri;
+                + "3. " + tweetTitleTruncate(rankingLists.hourly.rank3.title) + "\n" + rankingLists.hourly.rank3.uri + '\n'
+                + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
     
                 console.log(hourlyTweet + "\n");
     
@@ -474,12 +483,13 @@ function hourlyRankingTweet(rankingFilePath){
     }
 
     else{
-        let rankingLists = JSON.parse(fs.readFileSync(processedRankingFilePath));
+        const rankingLists = JSON.parse(fs.readFileSync(processedRankingFilePath));
 
-        let hourlyTweet = "毎時ランキング\n" 
+        const hourlyTweet = "毎時ランキング\n" 
         + "1. " + tweetTitleTruncate(rankingLists.hourly.rank1.title) + "\n" + rankingLists.hourly.rank1.uri + "\n" 
         + "2. " + tweetTitleTruncate(rankingLists.hourly.rank2.title) + "\n" + rankingLists.hourly.rank2.uri + "\n" 
-        + "3. " + tweetTitleTruncate(rankingLists.hourly.rank3.title) + "\n" + rankingLists.hourly.rank3.uri;
+        + "3. " + tweetTitleTruncate(rankingLists.hourly.rank3.title) + "\n" + rankingLists.hourly.rank3.uri + '\n'
+        + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
 
         console.log(hourlyTweet + "\n");
 
