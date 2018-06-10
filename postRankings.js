@@ -8,57 +8,7 @@ const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 const schedule = require("node-schedule");
 
-function createRankingList(RankingHtmlList){
-    const rankingList = {};
-    
-    for (let i = 0; i < RankingHtmlList.length; i++){
-        rankingList["rank" + String(i + 1)] = {};
-        rankingList["rank" + String(i + 1)]["points"] = RankingHtmlList.item(i).getElementsByClassName("count_time").item(0).textContent;
-        rankingList["rank" + String(i + 1)]["rank"] = RankingHtmlList.item(i).getElementsByClassName("icon_rank rank" + String(i + 1)).item(0).textContent;
-        rankingList["rank" + String(i + 1)]["uri"] = RankingHtmlList.item(i).getElementsByTagName("a").item(0).href;
-        rankingList["rank" + String(i + 1)]["title"] = RankingHtmlList.item(i).getElementsByClassName("ttl").item(0).textContent;
-        rankingList["rank" + String(i + 1)]["time"] = RankingHtmlList.item(i).getElementsByClassName("time").item(0).textContent;
-        rankingList["rank" + String(i + 1)]["thumbnail"] = RankingHtmlList.item(i).getElementsByTagName("img").item(0).src;
-    }
-    
-    return rankingList;
-}
-
-function getRankingLists(rankingFilePath){
-    if (fs.existsSync(rankingFilePath)){
-        const file = fs.readFileSync(rankingFilePath);  
-        const dom = new JSDOM(file);
-        const rankingHtmlLists = dom.window.document.getElementById("wrapper")
-                            .getElementsByClassName("ranking_cnt clearfix").item(0)
-                            .querySelectorAll("li");    
-        
-        const hourlyRankingHtmlList = rankingHtmlLists.item(0).getElementsByClassName("box");
-        const dailyRankingHtmlList = rankingHtmlLists.item(1).getElementsByClassName("box");
-        const weeklyRankingHtmlList = rankingHtmlLists.item(2).getElementsByClassName("box");
-        const monthlyRankingHtmlList = rankingHtmlLists.item(3).getElementsByClassName("box");
-
-        const hourlyRankingList = createRankingList(hourlyRankingHtmlList);
-        const dailyRankingList = createRankingList(dailyRankingHtmlList);
-        const weeklyRankingList = createRankingList(weeklyRankingHtmlList);
-        const monthlyRankingList = createRankingList(monthlyRankingHtmlList);
-        
-        const rankingLists = {
-            "hourly": hourlyRankingList,
-            "daily": dailyRankingList,
-            "weekly": weeklyRankingList,
-            "monthly": monthlyRankingList,
-            "lastUpdated": moment().utc().format()
-        };
-
-        return rankingLists;
-    }
-    
-    else {
-        const error = new Error(String(rankingFilePath) + " does not exist!");
-        return error;
-    }
-
-}
+const RankingListModule = require("./rankingListModule.js");
 
 function tweetPostStatUpdateRetry(message){
     const secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
@@ -251,7 +201,7 @@ function monthlyRankingTweet(rankingFilePath){
     const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
-            const rankingLists = getRankingLists(rankingFilePath); 
+            const rankingLists = RankingListModule.getRankingLists(rankingFilePath); 
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }           
@@ -272,7 +222,7 @@ function monthlyRankingTweet(rankingFilePath){
         catch(error){
             console.error(error.message);
             rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
-                const rankingLists = getRankingLists(rankingFilePath); 
+                const rankingLists = RankingListModule.getRankingLists(rankingFilePath); 
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }           
@@ -314,7 +264,7 @@ function weeklyRankingTweet(rankingFilePath){
     const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
-            const rankingLists = getRankingLists(rankingFilePath);
+            const rankingLists = RankingListModule.getRankingLists(rankingFilePath);
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }        
@@ -335,7 +285,7 @@ function weeklyRankingTweet(rankingFilePath){
         catch(error){
             console.error(error.message);
             rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
-                const rankingLists = getRankingLists(rankingFilePath);
+                const rankingLists = RankingListModule.getRankingLists(rankingFilePath);
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }         
@@ -377,7 +327,7 @@ function dailyRankingTweet(rankingFilePath){
     const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
-            const rankingLists = getRankingLists(rankingFilePath);
+            const rankingLists = RankingListModule.getRankingLists(rankingFilePath);
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }         
@@ -398,7 +348,7 @@ function dailyRankingTweet(rankingFilePath){
         catch(error){
             console.error(error.message);
             rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
-                const rankingLists = getRankingLists(rankingFilePath);
+                const rankingLists = RankingListModule.getRankingLists(rankingFilePath);
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }         
@@ -440,7 +390,7 @@ function hourlyRankingTweet(rankingFilePath){
     const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
-            const rankingLists = getRankingLists(rankingFilePath);
+            const rankingLists = RankingListModule.getRankingLists(rankingFilePath);
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }
@@ -461,7 +411,7 @@ function hourlyRankingTweet(rankingFilePath){
         catch (error){
             console.error(error.message);
             rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
-                const rankingLists = getRankingLists(rankingFilePath);
+                const rankingLists = RankingListModule.getRankingLists(rankingFilePath);
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }
