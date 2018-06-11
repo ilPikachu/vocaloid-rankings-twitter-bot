@@ -8,7 +8,7 @@ const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 const schedule = require("node-schedule");
 
-const processRankingListModule = require("./processRankingListModule.js");
+const processRankingListModule = require("./processprocessRankingListModule.js");
 
 function tweetPostStatUpdateRetry(message){
     const secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
@@ -201,7 +201,7 @@ function monthlyRankingTweet(rankingFilePath){
     const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
-            const rankingLists = RankingListModule.getRankingLists(rankingFilePath); 
+            const rankingLists = processRankingListModule.getRankingLists(rankingFilePath); 
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }           
@@ -222,7 +222,7 @@ function monthlyRankingTweet(rankingFilePath){
         catch(error){
             console.error(error.message);
             rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
-                const rankingLists = RankingListModule.getRankingLists(rankingFilePath); 
+                const rankingLists = processRankingListModule.getRankingLists(rankingFilePath); 
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }           
@@ -264,7 +264,7 @@ function weeklyRankingTweet(rankingFilePath){
     const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
-            const rankingLists = RankingListModule.getRankingLists(rankingFilePath);
+            const rankingLists = processRankingListModule.getRankingLists(rankingFilePath);
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }        
@@ -285,7 +285,7 @@ function weeklyRankingTweet(rankingFilePath){
         catch(error){
             console.error(error.message);
             rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
-                const rankingLists = RankingListModule.getRankingLists(rankingFilePath);
+                const rankingLists = processRankingListModule.getRankingLists(rankingFilePath);
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }         
@@ -327,7 +327,7 @@ function dailyRankingTweet(rankingFilePath){
     const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
-            const rankingLists = RankingListModule.getRankingLists(rankingFilePath);
+            const rankingLists = processRankingListModule.getRankingLists(rankingFilePath);
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }         
@@ -348,7 +348,7 @@ function dailyRankingTweet(rankingFilePath){
         catch(error){
             console.error(error.message);
             rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
-                const rankingLists = RankingListModule.getRankingLists(rankingFilePath);
+                const rankingLists = processRankingListModule.getRankingLists(rankingFilePath);
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }         
@@ -390,7 +390,7 @@ function hourlyRankingTweet(rankingFilePath){
     const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
     if (!fs.existsSync(processedRankingFilePath)){
         try{
-            const rankingLists = RankingListModule.getRankingLists(rankingFilePath);
+            const rankingLists = processRankingListModule.getRankingLists(rankingFilePath);
             if (rankingLists instanceof Error){
                 throw(rankingLists);
             }
@@ -411,7 +411,7 @@ function hourlyRankingTweet(rankingFilePath){
         catch (error){
             console.error(error.message);
             rankingPageRequestWithSingleTweetRetry(rankingFilePath, () => {
-                const rankingLists = RankingListModule.getRankingLists(rankingFilePath);
+                const rankingLists = processRankingListModule.getRankingLists(rankingFilePath);
                 if (rankingLists instanceof Error){
                     throw(rankingLists);
                 }
