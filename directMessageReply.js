@@ -30,7 +30,8 @@ function directMessageReply(event){
         for (let i = 0; i < directMessagekeywords[directMessageType].length; i++){
             if (event.direct_message.text == directMessagekeywords[directMessageType][i]){
                 const userId = event.direct_message.sender_id;
-                dmRequestBuilder(String(directMessageType), String(userId), (dmRequest) => {
+                const promise = dmRequestBuilder(String(directMessageType), String(userId));
+                promise.then(function(dmRequest){
                     replyBackRankings(String(directMessageType), String(userId), dmRequest);
                 });
                 break outterloop;
@@ -40,7 +41,6 @@ function directMessageReply(event){
 }
 
 function replyBackRankings(directMessageType, userId, dmRequest){
-    //console.log(dmRequestBuilder(directMessageType, userId).event.message_create);
     twitUser.post("direct_messages/events/new", dmRequest, (error, data, response) => {
         if (!!error){
             console.error('***DirectMessageErrorBegin***');
@@ -88,7 +88,7 @@ function replyBackRankingsRetry(directMessageType, userId, dmRequest){
     });
 }
 
-function dmRequestBuilder(directMessageType, userId, callback){
+function dmRequestBuilder(directMessageType, userId){
     const dmRequest = {
         "event": {
           "type": "message_create",
@@ -102,25 +102,38 @@ function dmRequestBuilder(directMessageType, userId, callback){
     };
 
     dmRequest.event.message_create.target.recipient_id = userId;
-    dmRequest.event.message_create.message_data.text = messageBuilder(directMessageType);
 
-    callback(dmRequest);
+    return new Promise(function(resolve, reject) {
+        const promise = messageBuilder(directMessageType);
+        promise.then(function(message){
+            dmRequest.event.message_create.message_data.text = message;
+            resolve(dmRequest);
+        });
+    })
 }
 
 function messageBuilder(directMessageType){
     const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
-    if (fs.existsSync(processedRankingFilePath)){
-        return createMessage(processedRankingFilePath, directMessageType);
-    }
-    else{
-        getRankingsModule.getRankingData(() => {
-            return createMessage(processedRankingFilePath, directMessageType);
-        });
-    }
+    
+    return new Promise(function(resolve, reject){
+        if (fs.existsSync(processedRankingFilePath)){
+            resolve(createMessage(processedRankingFilePath, directMessageType));
+        }
+
+        else{
+            const promise = getRankingsModule.getRankingData();
+            promise.then(function(){
+                resolve(createMessage(processedRankingFilePath, directMessageType));
+            }).catch(function(rejectMessage){
+                console.error(rejectMessage);
+            });
+        }
+    })
 }
 
 function createMessage(processedRankingFilePath, directMessageType){
     const rankingLists = JSON.parse(fs.readFileSync(processedRankingFilePath));
+
     const rankingListWithType = rankingLists[directMessageType];
 
     let directMessage = "";

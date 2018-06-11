@@ -3,7 +3,7 @@ const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 const moment = require("moment-timezone");
 
-function createRankingList(RankingHtmlList){
+const createRankingList = function (RankingHtmlList){
     const rankingList = {};
     
     for (let i = 0; i < RankingHtmlList.length; i++){
@@ -19,7 +19,7 @@ function createRankingList(RankingHtmlList){
     return rankingList;
 }
 
-function getRankingLists(rankingFilePath){
+const getRankingLists = function (rankingFilePath){
     if (fs.existsSync(rankingFilePath)){
         const file = fs.readFileSync(rankingFilePath);  
         const dom = new JSDOM(file);
@@ -54,4 +54,4 @@ function getRankingLists(rankingFilePath){
     }
 }
 
-module.exports = {createRankingList, getRankingLists};
+exports.getRankingLists = getRankingLists;

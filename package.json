@@ -23,6 +23,7 @@
     "moment-timezone": "^0.5.14",
     "node-schedule": "^1.2.5",
     "request": "^2.83.0",
+    "request-promise": "^4.2.2",
     "twit": "^2.2.9"
   }
 }
