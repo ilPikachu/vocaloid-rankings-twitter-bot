@@ -8,7 +8,7 @@ const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 const schedule = require("node-schedule");
 
-const RankingListModule = require("./rankingListModule.js");
+const processRankingListModule = require("./processRankingListModule.js");
 
 function tweetPostStatUpdateRetry(message){
     const secrets = JSON.parse(fs.readFileSync("./utilities/secrets.json"));
