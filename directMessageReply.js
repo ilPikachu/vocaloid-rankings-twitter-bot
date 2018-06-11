@@ -25,11 +25,12 @@ const stream = twitUser.stream("user");
 stream.on("direct_message", directMessageReply);
 
 function directMessageReply(event){
+    console.log(event.direct_message);
     outterloop:
     for (let directMessageType in directMessagekeywords){
         for (let i = 0; i < directMessagekeywords[directMessageType].length; i++){
             if (event.direct_message.text == directMessagekeywords[directMessageType][i]){
-                const userId = event.direct_message.sender_id;
+                const userId = event.direct_message.sender_id_str;
                 const promise = dmRequestBuilder(String(directMessageType), String(userId));
                 promise.then(function(dmRequest){
                     replyBackRankings(String(directMessageType), String(userId), dmRequest);
