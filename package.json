@@ -4,8 +4,7 @@
   "description": "This is a twitter bot that updates about hatsune miku related info periodically",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "forever start -a -l ~/miku_twitter_bot/logs/postRankings_console_logs/postRankings_console.log -o ~/miku_twitter_bot/logs/postRankings_stdout_logs/postRankings_stdout.log -e ~/miku_twitter_bot/logs/postRankings_stderr_logs/postRankings_stderr.log ./postRankings.js && forever start -a -l ~/miku_twitter_bot/logs/directMessageReply_console_logs/directMessageReply_console.log ./directMessageReply.js && forever start -a -l ~/miku_twitter_bot/logs/followBackUsers_console_logs/followBackUsers_console.log ./followBackUsers.js && forever list"
   },
   "repository": {
     "type": "git",
@@ -18,6 +17,7 @@
   },
   "homepage": "https://github.com/ilPikachu/miku_twitter_bot#readme",
   "dependencies": {
+    "forever": "^0.15.3",
     "jsdom": "^11.5.1",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
