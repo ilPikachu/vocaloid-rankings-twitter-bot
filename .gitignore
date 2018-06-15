@@ -1,3 +1,13 @@
+# Logs
+logs
+
+# Secrets
 secrets.json
-./rank_data/*
-./rank_data_proceeded/*
+
+# Ranking data
+rank_data/
+rank_data_proceeded/
+
+# Dependency directories
+node_modules/
+
