@@ -6,4 +6,4 @@ This is a twitter bot that updates about vocaloid songs rankings from niconico e
 
 
 ## LICENSE
-MIT
+[MIT](https://github.com/ilPikachu/vocaloid-rankings-twitter-bot/blob/master/LICENSE)
