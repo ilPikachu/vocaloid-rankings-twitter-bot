@@ -1,12 +1,10 @@
 "use strict";
 
-const Twit = require("twit");
 const fs = require("fs");
 const moment = require("moment-timezone");
-const request = require("request");
-const schedule = require("node-schedule");
-const twitUser = require("../../modules/twit_object_generator/twitObjectGeneratorModule.js");
-const directMessageBuilderModule = require("../../modules/direct_message_builder/directMessageBuilderModule.js");
+
+const twitUser = require("../../modules/twit_object_generator/twitObjectGeneratorModule");
+const directMessageBuilderModule = require("../../modules/direct_message_builder/directMessageBuilderModule");
 
 const stream = twitUser.stream("user");
 const directMessagekeywords = JSON.parse(fs.readFileSync("../../utilities/directMessageStrings.json"));
@@ -14,7 +12,6 @@ const directMessagekeywords = JSON.parse(fs.readFileSync("../../utilities/direct
 stream.on("direct_message", directMessageReply);
 
 function directMessageReply(event){
-    //console.log(event.direct_message);
     const directMessage = event.direct_message.text;
     const userId = event.direct_message.sender_id_str;
 

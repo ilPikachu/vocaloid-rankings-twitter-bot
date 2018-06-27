@@ -4,13 +4,13 @@ const fs = require("fs");
 const moment = require("moment-timezone");
 const request = require("request");
 
-const rankingParserModule = require("../niconico_parser/rankingParserModule");
+const saveRankingLists = require("../niconico_parser/saveRankingListsModule");
 
 const niconicoUrl = "http://ex.nicovideo.jp/vocaloid/ranking";
 
-const getRankingData = function (){
+module.exports = getRankingData = () => {
     const rankingFilePath = "../../../rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";
-    return new Promise(function(resolve, reject){
+    return new Promise((resolve, reject) => {
         request(niconicoUrl, (error, response, body) => {
             if (!!error){
                 console.error('***RankingPageFetchErrorBegin***');
@@ -24,17 +24,13 @@ const getRankingData = function (){
             else if (response.statusCode === 200){
                 fs.writeFileSync(rankingFilePath, body);
                 try{
-                    const rankingLists = rankingParserModule.getRankingLists(rankingFilePath);
-                    const processedRankingFilePath = "../../../rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json"; 
-                    if (rankingLists instanceof Error){
-                        throw(rankingLists);
-                    }           
-                    fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
+                    saveRankingLists(rankingFilePath);
                     resolve();
                 }
                 catch(error){
                     console.error(error.message);
-                }
+                    setTimeout(() => {getRankingDataRetry(rankingFilePath)}, 10*1000);  
+                }   
             }
             
             else{
@@ -49,8 +45,8 @@ const getRankingData = function (){
     })
 };
 
-const getRankingDataRetry = function (rankingFilePath){
-    return new Promise(function(resolve, reject){
+const getRankingDataRetry = (rankingFilePath) => {
+    return new Promise((resolve, reject) => {
         request(niconicoUrl, (error, response, body) => {
             if (!!error){
                 console.error('***RankingPageRetryErrorBegin***');
@@ -67,17 +63,13 @@ const getRankingDataRetry = function (rankingFilePath){
                 console.log("Retry Ranking Page File Path: " + rankingFilePath + "\n");
                 fs.writeFileSync(rankingFilePath, body);
                 try{
-                    const rankingLists = rankingParserModule.getRankingLists(rankingFilePath);
-                    const processedRankingFilePath = "../../../rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json"; 
-                    if (rankingLists instanceof Error){
-                        throw(rankingLists);
-                    }           
-                    fs.writeFileSync(processedRankingFilePath, JSON.stringify(rankingLists, null, 4));
+                    saveRankingLists(rankingFilePath);
                     resolve();
                 }
                 catch(error){
                     console.error(error.message);
-                }                               
+                    reject(moment().utc().format() + " Retry Ranking page fetch Success. But Ranking File Path Does Not Exist Error.");            
+                }                                  
             }
 
             else{
@@ -92,5 +84,3 @@ const getRankingDataRetry = function (rankingFilePath){
         });
     })
 };
-
-exports.getRankingData = getRankingData;

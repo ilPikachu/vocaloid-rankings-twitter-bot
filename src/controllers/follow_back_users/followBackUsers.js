@@ -1,15 +1,13 @@
 "use strict";
 
-const Twit = require("twit");
-const fs = require("fs");
 const moment = require("moment-timezone");
-const twitUser = require("../../modules/twit_object_generator/twitObjectGeneratorModule.js");
+const twitUser = require("../../modules/twit_object_generator/twitObjectGeneratorModule");
 
 const stream = twitUser.stream("user");
 
 stream.on("follow", followBack);
 
-function followBack(event){
+const followBack = (event) => {
     const screenName = event.source.screen_name;
     if (screenName !== "mikuchan_info"){ 
         console.log( screenName + " has followed the bot.\n");
@@ -29,9 +27,7 @@ function followBack(event){
             
             else if (response.statusCode === 403){
                 console.log(moment().utc().format() + " User " + " " + String(screenName) + " has already been followed: " + response.statusCode + "\n");
-            }
-
-            else{
+            }else{
                 console.log('***TweetFollowFailureBegin***');                
                 console.log(moment().utc().format() + " Tweet follow back failed. Not 200 or 403. Status code: " + response.statusCode + " " + response.statusMessage);
                 console.log(data);
@@ -40,10 +36,9 @@ function followBack(event){
             }
         });
     }
-}
+};
 
-
-function followBackRetry(screenName){
+const followBackRetry = (screenName) => {
     twitUser.post("friendships/create", {screen_name: screenName}, (error, data, response) => {
         if (!!error){
             console.error('***TweetRetryFollowErrorBegin***');
@@ -59,13 +54,11 @@ function followBackRetry(screenName){
         
         else if (response.statusCode === 403){
             console.log(moment().utc().format() + " User " + " " + String(screenName) + " has already been followed: " + response.statusCode + "\n");
-        }
-
-        else{
+        }else{
             console.log('***TweetRetryFollowFailureBegin***');                
             console.log(moment().utc().format() + " Tweet follow back failed. Not 200 or 403. Status code: " + response.statusCode + " " + response.statusMessage);
             console.log(data);
             console.log('***TweetRetryFollowFailureEnd***\n');                                
         }
     });
-}
+};
