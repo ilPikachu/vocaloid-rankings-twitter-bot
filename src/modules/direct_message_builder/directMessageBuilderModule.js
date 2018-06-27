@@ -3,10 +3,10 @@
 const fs = require("fs");
 const moment = require("moment-timezone");
 
-const getRankingsModule = require("./getRankingsModule.js")
+const rankingScraperModule = require("../niconico_scraper/rankingScraperModule")
 
-function dmRequestBuilder(directMessageType, userId){
-    const dmRequest = {
+function directMessageRequestBuilder(directMessageType, userId){
+    const directMessageRequest = {
         "event": {
           "type": "message_create",
           "message_create": {
@@ -18,31 +18,27 @@ function dmRequestBuilder(directMessageType, userId){
         }
     };
 
-    dmRequest.event.message_create.target.recipient_id = userId;
+    directMessageRequest.event.message_create.target.recipient_id = userId;
 
     return new Promise(function(resolve, reject) {
         const promise = messageBuilder(directMessageType);
         promise.then(function(message){
-            dmRequest.event.message_create.message_data.text = message;
-            resolve(dmRequest);
+            directMessageRequest.event.message_create.message_data.text = message;
+            resolve(directMessageRequest);
         });
     })
 }
 
 function messageBuilder(directMessageType){
-    const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
-    
+    const processedRankingFilePath = "../../../rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
+
     return new Promise(function(resolve, reject){
         if (fs.existsSync(processedRankingFilePath)){
             resolve(createMessage(processedRankingFilePath, directMessageType));
-        }
-
-        else{
-            const promise = getRankingsModule.getRankingData();
+        }else{
+            const promise = rankingScraperModule.getRankingData();
             promise.then(function(){
                 resolve(createMessage(processedRankingFilePath, directMessageType));
-            }).catch(function(rejectMessage){
-                console.error(rejectMessage);
             });
         }
     })
@@ -82,3 +78,4 @@ function createMessage(processedRankingFilePath, directMessageType){
     return directMessage;
 }
 
+exports.directMessageRequestBuilder = directMessageRequestBuilder;

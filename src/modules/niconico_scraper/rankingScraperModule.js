@@ -4,12 +4,14 @@ const fs = require("fs");
 const moment = require("moment-timezone");
 const request = require("request");
 
-const processRankingListModule = require("./processRankingListModule.js");
+const rankingParserModule = require("../niconico_parser/rankingParserModule");
+
+const niconicoUrl = "http://ex.nicovideo.jp/vocaloid/ranking";
 
 const getRankingData = function (){
-    const rankingFilePath = "./rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";
+    const rankingFilePath = "../../../rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";
     return new Promise(function(resolve, reject){
-        request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
+        request(niconicoUrl, (error, response, body) => {
             if (!!error){
                 console.error('***RankingPageFetchErrorBegin***');
                 console.error(moment().utc().format() + " Ranking Page Fetch Failure. Error.");                
@@ -22,8 +24,8 @@ const getRankingData = function (){
             else if (response.statusCode === 200){
                 fs.writeFileSync(rankingFilePath, body);
                 try{
-                    const rankingLists = processRankingListModule.getRankingLists(rankingFilePath);
-                    const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json"; 
+                    const rankingLists = rankingParserModule.getRankingLists(rankingFilePath);
+                    const processedRankingFilePath = "../../../rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json"; 
                     if (rankingLists instanceof Error){
                         throw(rankingLists);
                     }           
@@ -49,7 +51,7 @@ const getRankingData = function (){
 
 const getRankingDataRetry = function (rankingFilePath){
     return new Promise(function(resolve, reject){
-        request("http://ex.nicovideo.jp/vocaloid/ranking", (error, response, body) => {
+        request(niconicoUrl, (error, response, body) => {
             if (!!error){
                 console.error('***RankingPageRetryErrorBegin***');
                 console.error(moment().utc().format() + " Retry Ranking page fetch failure again. Error.");
@@ -65,8 +67,8 @@ const getRankingDataRetry = function (rankingFilePath){
                 console.log("Retry Ranking Page File Path: " + rankingFilePath + "\n");
                 fs.writeFileSync(rankingFilePath, body);
                 try{
-                    const rankingLists = processRankingListModule.getRankingLists(rankingFilePath);
-                    const processedRankingFilePath = "./rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json"; 
+                    const rankingLists = rankingParserModule.getRankingLists(rankingFilePath);
+                    const processedRankingFilePath = "../../../rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json"; 
                     if (rankingLists instanceof Error){
                         throw(rankingLists);
                     }           
