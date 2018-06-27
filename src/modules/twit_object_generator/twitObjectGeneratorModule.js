@@ -12,4 +12,4 @@ const twitAuth = {
     access_token_secret:  secrets.twitter.access_token_secret
 };
 
-module.exports = new Twit(twitAuth);
+module.exports = twitUser = new Twit(twitAuth);

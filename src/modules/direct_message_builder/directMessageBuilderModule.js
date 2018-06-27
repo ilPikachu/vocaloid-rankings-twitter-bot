@@ -3,9 +3,9 @@
 const fs = require("fs");
 const moment = require("moment-timezone");
 
-const rankingScraperModule = require("../niconico_scraper/rankingScraperModule")
+const getRankingData = require("../niconico_scraper/rankingScraperModule")
 
-function directMessageRequestBuilder(directMessageType, userId){
+module.exports = directMessageRequestBuilder = (directMessageType, userId) => {
     const directMessageRequest = {
         "event": {
           "type": "message_create",
@@ -27,24 +27,24 @@ function directMessageRequestBuilder(directMessageType, userId){
             resolve(directMessageRequest);
         });
     })
-}
+};
 
-function messageBuilder(directMessageType){
+const messageBuilder = (directMessageType) => {
     const processedRankingFilePath = "../../../rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
 
     return new Promise(function(resolve, reject){
         if (fs.existsSync(processedRankingFilePath)){
             resolve(createMessage(processedRankingFilePath, directMessageType));
         }else{
-            const promise = rankingScraperModule.getRankingData();
+            const promise = getRankingData();
             promise.then(function(){
                 resolve(createMessage(processedRankingFilePath, directMessageType));
             });
         }
     })
-}
+};
 
-function createMessage(processedRankingFilePath, directMessageType){
+const createMessage = (processedRankingFilePath, directMessageType) =>{
     const rankingLists = JSON.parse(fs.readFileSync(processedRankingFilePath));
 
     const rankingListWithType = rankingLists[directMessageType];
@@ -76,6 +76,4 @@ function createMessage(processedRankingFilePath, directMessageType){
     directMessage += moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
 
     return directMessage;
-}
-
-exports.directMessageRequestBuilder = directMessageRequestBuilder;
+};

@@ -9,7 +9,7 @@ const rankingParserModule = require("../../modules/niconico_parser/rankingParser
 const rankingScraperModule = require("../../modules/niconico_scraper/rankingScraperModule")
 const tweetRankingsHourlyModule = require("../../modules/post_rankings_modules/tweetRankingsHourlyModule")
 
-rankingTweetUpdater = () => {
+const rankingTweetUpdater = () => {
     const rankingFilePath = "../../../rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";    
     const processedRankingFilePath = "../../../rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json"; 
     if (!fs.existsSync(rankingFilePath)){

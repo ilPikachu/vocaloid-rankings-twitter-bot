@@ -11,7 +11,7 @@ const directMessagekeywords = JSON.parse(fs.readFileSync("../../utilities/direct
 
 stream.on("direct_message", directMessageReply);
 
-function directMessageReply(event){
+const directMessageReply = (event) => {
     const directMessage = event.direct_message.text;
     const userId = event.direct_message.sender_id_str;
 
@@ -24,9 +24,9 @@ function directMessageReply(event){
             console.error(rejectMessage);
         }); 
     }
-}
+};
 
-function replyBackRankings(directMessageType, userId, directMessageRequest){
+const replyBackRankings = (directMessageType, userId, directMessageRequest) => {
     twitUser.post("direct_messages/events/new", directMessageRequest, (error, data, response) => {
         if (!!error){
             console.error('***DirectMessageErrorBegin***');
@@ -47,9 +47,9 @@ function replyBackRankings(directMessageType, userId, directMessageRequest){
             console.log('***DirectMessageFailureEnd***\n');                                
         }
     });
-}
+};
 
-function replyBackRankingsRetry(directMessageType, userId, directMessageRequest){
+const replyBackRankingsRetry = (directMessageType, userId, directMessageRequest) => {
     twitUser.post("direct_messages/events/new", directMessageRequest, (error, data, response) => {
         if (!!error){
             console.error('***DirectMessageRetryErrorBegin***');
@@ -68,4 +68,4 @@ function replyBackRankingsRetry(directMessageType, userId, directMessageRequest)
             console.log('***DirectMessageRetryFailureEnd***\n');                                
         }
     });
-}
+};
