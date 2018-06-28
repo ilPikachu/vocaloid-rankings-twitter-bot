@@ -4,7 +4,7 @@
   "description": "This is a twitter bot that updates about niconico vocaloid rankings hourly",
   "main": "index.js",
   "scripts": {
-    "start": "forever start -a -l ~/miku_twitter_bot/logs/console_logs/console.log -o ~/miku_twitter_bot/logs/stdout_logs/stdout.log -e ~/miku_twitter_bot/logs/stderr_logs/stderr.log ./index.js"
+    "start": "forever start -a -l ~/miku_twitter_bot/logs/console_logs/console.log -o ~/miku_twitter_bot/logs/stdout_logs/stdout.log -e ~/miku_twitter_bot/logs/stderr_logs/stderr.log ~/miku_twitter_bot/src/index.js"
   },
   "repository": {
     "type": "git",
