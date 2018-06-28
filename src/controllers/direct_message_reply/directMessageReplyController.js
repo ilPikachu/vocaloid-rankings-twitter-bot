@@ -6,25 +6,24 @@ const moment = require("moment-timezone");
 const twitUser = require("../../modules/twit_object_generator/twitObjectGeneratorModule");
 const directMessageBuilderModule = require("../../modules/direct_message_builder/directMessageBuilderModule");
 
-const stream = twitUser.stream("user");
-const directMessagekeywords = JSON.parse(fs.readFileSync("../../utilities/directMessageStrings.json"));
+const directMessagekeywords = JSON.parse(fs.readFileSync(process.env.HOME + "/miku_twitter_bot/src/utilities/directMessageStrings.json"));
 
-stream.on("direct_message", directMessageReply);
+module.exports = {
+    directMessageReply: (event) => {
+        const directMessage = event.direct_message.text;
+        const userId = event.direct_message.sender_id_str;
 
-const directMessageReply = (event) => {
-    const directMessage = event.direct_message.text;
-    const userId = event.direct_message.sender_id_str;
-
-    if (directMessagekeywords.hasOwnProperty(directMessage)){
-        const directMessageType = directMessagekeywords[directMessage];
-        const promise = directMessageBuilderModule.directMessageRequestBuilder(directMessageType, userId);
-        promise.then(function(directMessageRequest){
-            replyBackRankings(directMessageType, userId, directMessageRequest);
-        }).catch(function(rejectMessage){
-            console.error(rejectMessage);
-        }); 
+        if (directMessagekeywords.hasOwnProperty(directMessage)){
+            const directMessageType = directMessagekeywords[directMessage];
+            const promise = directMessageBuilderModule.directMessageRequestBuilder(directMessageType, userId);
+            promise.then(function(directMessageRequest){
+                replyBackRankings(directMessageType, userId, directMessageRequest);
+            }).catch(function(rejectMessage){
+                console.error(rejectMessage);
+            }); 
+        }
     }
-};
+}
 
 const replyBackRankings = (directMessageType, userId, directMessageRequest) => {
     twitUser.post("direct_messages/events/new", directMessageRequest, (error, data, response) => {

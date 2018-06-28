@@ -3,7 +3,7 @@
 const Twit = require("twit");
 const fs = require("fs");
 
-const secrets = JSON.parse(fs.readFileSync("../../utilities/secrets.json"));
+const secrets = JSON.parse(fs.readFileSync(process.env.HOME + "/miku_twitter_bot/src/utilities/secrets.json"));
 
 const twitAuth = {
     consumer_key:         secrets.twitter.consumer_key,
@@ -12,4 +12,4 @@ const twitAuth = {
     access_token_secret:  secrets.twitter.access_token_secret
 };
 
-module.exports = twitUser = new Twit(twitAuth);
+module.exports = new Twit(twitAuth);

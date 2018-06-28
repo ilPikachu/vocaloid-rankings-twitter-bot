@@ -3,45 +3,47 @@
 const fs = require("fs");
 const moment = require("moment-timezone");
 
-const getRankingData = require("../niconico_scraper/rankingScraperModule")
+const rankingScraperModule = require("../niconico_scraper/rankingScraperModule")
 
-module.exports = directMessageRequestBuilder = (directMessageType, userId) => {
-    const directMessageRequest = {
-        "event": {
-          "type": "message_create",
-          "message_create": {
-            "target": {
-            },
-            "message_data": {
+module.exports = {
+    directMessageRequestBuilder: (directMessageType, userId) => {
+        const directMessageRequest = {
+            "event": {
+            "type": "message_create",
+            "message_create": {
+                "target": {
+                },
+                "message_data": {
+                }
             }
-          }
-        }
-    };
+            }
+        };
 
-    directMessageRequest.event.message_create.target.recipient_id = userId;
+        directMessageRequest.event.message_create.target.recipient_id = userId;
 
-    return new Promise(function(resolve, reject) {
-        const promise = messageBuilder(directMessageType);
-        promise.then(function(message){
-            directMessageRequest.event.message_create.message_data.text = message;
-            resolve(directMessageRequest);
+        return new Promise(function(resolve, reject) {
+            const promise = messageBuilder(directMessageType);
+            promise.then(function(message){
+                directMessageRequest.event.message_create.message_data.text = message;
+                resolve(directMessageRequest);
+            });
         });
-    })
-};
+    }
+}
 
 const messageBuilder = (directMessageType) => {
-    const processedRankingFilePath = "../../../rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json";
+    const processedRankingFilePath = process.env.HOME + "/miku_twitter_bot/rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json"; 
 
     return new Promise(function(resolve, reject){
         if (fs.existsSync(processedRankingFilePath)){
             resolve(createMessage(processedRankingFilePath, directMessageType));
         }else{
-            const promise = getRankingData();
+            const promise = rankingScraperModule.getRankingData();
             promise.then(function(){
                 resolve(createMessage(processedRankingFilePath, directMessageType));
             });
         }
-    })
+    });
 };
 
 const createMessage = (processedRankingFilePath, directMessageType) =>{
