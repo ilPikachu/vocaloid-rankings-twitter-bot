@@ -11,3 +11,6 @@ rank_data_proceeded/
 # Dependency directories
 node_modules/
 
+# Mac OS generated
+.DS_Store
+.DS_Store?
