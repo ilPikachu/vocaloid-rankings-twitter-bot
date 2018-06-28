@@ -1,13 +1,10 @@
 {
   "name": "miku_twitter_bot",
   "version": "1.0.0",
-  "description": "This is a twitter bot that updates about hatsune miku related info periodically",
+  "description": "This is a twitter bot that updates about niconico vocaloid rankings hourly",
   "main": "index.js",
   "scripts": {
-    "start": "npm run start_postRankings_forever && npm run start_followBackUsers_forever && npm run start_directMessageReply_forever && forever list",
-    "start_directMessageReply_forever": "forever start -a -l ~/miku_twitter_bot/logs/directMessageReply_console_logs/directMessageReply_console.log ./directMessageReply.js",
-    "start_followBackUsers_forever": "forever start -a -l ~/miku_twitter_bot/logs/followBackUsers_console_logs/followBackUsers_console.log ./followBackUsers.js",
-    "start_postRankings_forever": "forever start -a -l ~/miku_twitter_bot/logs/postRankings_console_logs/postRankings_console.log -o ~/miku_twitter_bot/logs/postRankings_stdout_logs/postRankings_stdout.log -e ~/miku_twitter_bot/logs/postRankings_stderr_logs/postRankings_stderr.log ./postRankings.js"
+    "start": "forever start -a -l ~/miku_twitter_bot/logs/console_logs/console.log -o ~/miku_twitter_bot/logs/stdout_logs/stdout.log -e ~/miku_twitter_bot/logs/stderr_logs/stderr.log ./index.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +17,7 @@
   },
   "homepage": "https://github.com/ilPikachu/miku_twitter_bot#readme",
   "dependencies": {
+    "eslint": "^5.0.1",
     "forever": "^0.15.3",
     "jsdom": "^11.5.1",
     "moment": "^2.20.1",
