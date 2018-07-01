@@ -53,20 +53,21 @@ const createMessage = (processedRankingFilePath, directMessageType) =>{
 
     let directMessage = "";
 
-    if (directMessageType == "hourly"){
-        directMessage = "毎時ランキング\n";
-    }
-        
-    else if (directMessageType == "daily"){
-        directMessage = "24時間ランキング\n";
-    }
-
-    else if (directMessageType == "weekly"){
-        directMessage = "週間ランキング\n";
-    }
-
-    else if (directMessageType == "monthly"){
-        directMessage = "月間ランキング\n";
+    switch(directMessageType){
+        case "hourly":
+            directMessage = "毎時ランキング\n";
+            break;
+        case "daily":
+            directMessage = "24時間ランキング\n";
+            break;
+        case "weekly":
+            directMessage = "週間ランキング\n";
+            break;
+        case "monthly":
+            directMessage = "月間ランキング\n";
+            break;
+        default:
+            console.error("Direct message type request not supported");
     }
 
     //Todo: User Specified ranking from top 1 to top 20

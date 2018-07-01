@@ -4,25 +4,41 @@ const fs = require("fs");
 const moment = require("moment-timezone");
 
 const rankingScraperModule = require("../../modules/niconico_scraper/rankingScraperModule")
-const tweetRankingsHourlyModule = require("../../modules/post_rankings_modules/tweetRankingsHourlyModule")
+const tweetRankingsModule = require("../../modules/post_rankings_modules/tweetRankingModule")
 
 module.exports = {
-    rankingTweetUpdater: function () {
+    rankingTweetUpdater: (requestedRankings) => {
         const processedRankingFilePath = process.env.HOME + "/miku_twitter_bot/rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json"; 
         if (!fs.existsSync(processedRankingFilePath)){
             const promise = rankingScraperModule.getRankingData();
             promise.then(() => {
-                tweetRankingsHourlyModule.monthlyRankingTweet(processedRankingFilePath);                
-                setTimeout(() => {tweetRankingsHourlyModule.weeklyRankingTweet(processedRankingFilePath)}, 60*1000);
-                setTimeout(() => {tweetRankingsHourlyModule.dailyRankingTweet(processedRankingFilePath)}, 2*60*1000);                
-                setTimeout(() => {tweetRankingsHourlyModule.hourlyRankingTweet(processedRankingFilePath)}, 3*60*1000);
+                tweetRankingsSelector(requestedRankings, processedRankingFilePath);
             });
                                                     
         }else{
-            tweetRankingsHourlyModule.monthlyRankingTweet(processedRankingFilePath);                
-            setTimeout(() => {tweetRankingsHourlyModule.weeklyRankingTweet(processedRankingFilePath)}, 60*1000);
-            setTimeout(() => {tweetRankingsHourlyModule.dailyRankingTweet(processedRankingFilePath)}, 2*60*1000);                
-            setTimeout(() => {tweetRankingsHourlyModule.hourlyRankingTweet(processedRankingFilePath)}, 3*60*1000);
+            tweetRankingsSelector(requestedRankings, processedRankingFilePath);
         }
     }
 }
+
+const tweetRankingsSelector = (requestedRankings, processedRankingFilePath) => {
+    console.log(requestedRankings);
+    for (let i = 0; i < requestedRankings.length; i++){
+        switch(requestedRankings[i]){
+            case "hourly":
+                setTimeout(() => {tweetRankingsModule.hourlyRankingTweet(processedRankingFilePath)}, i*60*1000);
+                break;
+            case "daily":
+                setTimeout(() => {tweetRankingsModule.dailyRankingTweet(processedRankingFilePath)}, i*60*1000);
+                break;
+            case "weekly":
+                setTimeout(() => {tweetRankingsModule.weeklyRankingTweet(processedRankingFilePath)}, i*60*1000);
+                break;
+            case "monthly":
+                setTimeout(() => {tweetRankingsModule.monthlyRankingTweet(processedRankingFilePath)}, i*60*1000);
+                break;
+            default:
+                console.error("Ranking request not supported");
+        }
+    }
+};
