@@ -16,7 +16,7 @@ stream.on("follow", followBackUsersController.followBack);
 
 stream.on("direct_message", directMessageReplyController.directMessageReply);
 
-schedule.scheduleJob({minute: 25}, () => {
+schedule.scheduleJob({minute: 0}, () => {
     postRankingsController.rankingTweetUpdater(requestHoulyAndDailyRankings);
 });
 
