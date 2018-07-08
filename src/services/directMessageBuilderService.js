@@ -3,7 +3,7 @@
 const fs = require("fs");
 const moment = require("moment-timezone");
 
-const rankingScraperModule = require("../niconico_scraper/rankingScraperModule")
+const rankingScraperModule = require("./rankingScraperService")
 
 module.exports = {
     directMessageRequestBuilder: (directMessageType, userId) => {

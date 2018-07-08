@@ -3,8 +3,8 @@
 const fs = require("fs");
 const moment = require("moment-timezone");
 
-const tweetPostStatUpdateModule = require("./tweetPostStatUpdateModule");
-const tweetTitleTruncaterModule = require("../tweet_title_truncater/tweetTitleTruncaterModule")
+const tweetPostStatUpdateModule = require("./tweetPostStatUpdateService");
+const tweetTitleTruncaterModule = require("../tweetTitleTruncaterService")
 
 module.exports = {
     monthlyRankingTweet: (processedRankingFilePath) => {

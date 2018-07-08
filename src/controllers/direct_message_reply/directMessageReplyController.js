@@ -3,8 +3,8 @@
 const fs = require("fs");
 const moment = require("moment-timezone");
 
-const twitUser = require("../../modules/twit_object_generator/twitObjectGeneratorModule");
-const directMessageBuilderModule = require("../../modules/direct_message_builder/directMessageBuilderModule");
+const twitUser = require("../../services/twitObjectGeneratorService");
+const directMessageBuilderModule = require("../../services/directMessageBuilderService");
 
 const directMessagekeywords = JSON.parse(fs.readFileSync(process.env.HOME + "/miku_twitter_bot/src/utilities/directMessageStrings.json"));
 

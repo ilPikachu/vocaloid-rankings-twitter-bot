@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 const moment = require("moment-timezone");
-const rankingScraperModule = require("./rankingScraperModule")
+const rankingScraperModule = require("./rankingScraperService")
 
 module.exports = { 
     saveRankingLists: (rankingFilePath) => {

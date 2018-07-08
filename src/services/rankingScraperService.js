@@ -4,7 +4,7 @@ const fs = require("fs");
 const moment = require("moment-timezone");
 const request = require("request");
 
-const saveRankingModule = require("../niconico_parser/saveRankingModule");
+const saveRankingModule = require("./niconico_parser_services/saveRankingService");
 
 const niconicoUrl = "http://ex.nicovideo.jp/vocaloid/ranking";
 

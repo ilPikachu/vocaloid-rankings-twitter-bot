@@ -1,12 +1,12 @@
 "use strict";
 
 const moment = require("moment-timezone");
-const twitUser = require("../../modules/twit_object_generator/twitObjectGeneratorModule");
+const twitUser = require("../../services/twitObjectGeneratorService");
 
 module.exports = {
     followBack: (event) => {
         const screenName = event.source.screen_name;
-        if (screenName !== "mikuchan_info"){ 
+        if (screenName !== "voca_ranking"){ 
             console.log( screenName + " has followed the bot.\n");
             twitUser.post("friendships/create", {screen_name: screenName}, (error, data, response) => {
                 if (!!error){

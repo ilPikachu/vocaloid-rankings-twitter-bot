@@ -1,7 +1,7 @@
 "use strict"
 
 const schedule = require("node-schedule");
-const twitUser = require("./modules/twit_object_generator/twitObjectGeneratorModule");
+const twitUser = require("./services/twitObjectGeneratorService");
 const postRankingsController = require("./controllers/post_rankings/postRankingsController");
 const followBackUsersController = require("./controllers/follow_back_users/followBackUsersController");
 const directMessageReplyController= require("./controllers/direct_message_reply/directMessageReplyController");

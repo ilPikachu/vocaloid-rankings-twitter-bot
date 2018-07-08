@@ -3,8 +3,8 @@
 const fs = require("fs");
 const moment = require("moment-timezone");
 
-const rankingScraperModule = require("../../modules/niconico_scraper/rankingScraperModule")
-const tweetRankingsModule = require("../../modules/post_rankings_modules/tweetRankingModule")
+const rankingScraperModule = require("../../services/rankingScraperService")
+const tweetRankingsModule = require("../../services/post_rankings_services/tweetRankingService")
 
 module.exports = {
     rankingTweetUpdater: (requestedRankings) => {
