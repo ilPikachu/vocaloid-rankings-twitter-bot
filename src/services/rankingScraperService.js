@@ -4,7 +4,7 @@ const fs = require("fs");
 const moment = require("moment-timezone");
 const request = require("request");
 
-const saveRankingModule = require("./niconico_parser_services/saveRankingService");
+const saveRankingService = require("./niconico_parser_services/saveRankingService");
 
 const niconicoUrl = "http://ex.nicovideo.jp/vocaloid/ranking";
 
@@ -25,7 +25,7 @@ module.exports = {
                 else if (response.statusCode === 200){
                     fs.writeFileSync(rankingFilePath, body);
                     try{
-                        saveRankingModule.saveRankingLists(rankingFilePath);
+                        saveRankingService.saveRankingLists(rankingFilePath);
                         resolve();
                     }
                     catch(error){
@@ -65,7 +65,7 @@ const getRankingDataRetry = (rankingFilePath) => {
                 console.log("Retry Ranking Page File Path: " + rankingFilePath + "\n");
                 fs.writeFileSync(rankingFilePath, body);
                 try{
-                    saveRankingModule.saveRankingLists(rankingFilePath);
+                    saveRankingService.saveRankingLists(rankingFilePath);
                     resolve();
                 }
                 catch(error){

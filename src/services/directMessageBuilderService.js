@@ -3,7 +3,7 @@
 const fs = require("fs");
 const moment = require("moment-timezone");
 
-const rankingScraperModule = require("./rankingScraperService")
+const rankingScraperService = require("./rankingScraperService")
 
 module.exports = {
     directMessageRequestBuilder: (directMessageType, userId) => {
@@ -38,7 +38,7 @@ const messageBuilder = (directMessageType) => {
         if (fs.existsSync(processedRankingFilePath)){
             resolve(createMessage(processedRankingFilePath, directMessageType));
         }else{
-            const promise = rankingScraperModule.getRankingData();
+            const promise = rankingScraperService.getRankingData();
             promise.then(function(){
                 resolve(createMessage(processedRankingFilePath, directMessageType));
             });
