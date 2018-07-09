@@ -2,7 +2,6 @@ const mongoConnectionService = require("./mongoConnectionService");
 
 const dbConnectionPromise = mongoConnectionService.mongodbConnection();
 
-
 module.exports = {
     databaseInsertOne: (dbName, collectionName, insertDocument) => {
         return new Promise(function(resolve, reject){
