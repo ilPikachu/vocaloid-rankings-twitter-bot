@@ -3,8 +3,8 @@
 const fs = require("fs");
 const moment = require("moment-timezone");
 
-const twitUser = require("../../modules/twit_object_generator/twitObjectGeneratorModule");
-const directMessageBuilderModule = require("../../modules/direct_message_builder/directMessageBuilderModule");
+const twitUser = require("../../services/twitObjectGeneratorService");
+const directMessageBuilderService = require("../../services/directMessageBuilderService");
 
 const directMessagekeywords = JSON.parse(fs.readFileSync(process.env.HOME + "/miku_twitter_bot/src/utilities/directMessageStrings.json"));
 
@@ -15,7 +15,7 @@ module.exports = {
 
         if (directMessagekeywords.hasOwnProperty(directMessage)){
             const directMessageType = directMessagekeywords[directMessage];
-            const promise = directMessageBuilderModule.directMessageRequestBuilder(directMessageType, userId);
+            const promise = directMessageBuilderService.directMessageRequestBuilder(directMessageType, userId);
             promise.then(function(directMessageRequest){
                 replyBackRankings(directMessageType, userId, directMessageRequest);
             }).catch(function(rejectMessage){

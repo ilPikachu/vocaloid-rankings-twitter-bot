@@ -1,7 +1,7 @@
 "use strict"
 
 const schedule = require("node-schedule");
-const twitUser = require("./modules/twit_object_generator/twitObjectGeneratorModule");
+const twitUser = require("./services/twitObjectGeneratorService");
 const postRankingsController = require("./controllers/post_rankings/postRankingsController");
 const followBackUsersController = require("./controllers/follow_back_users/followBackUsersController");
 const directMessageReplyController= require("./controllers/direct_message_reply/directMessageReplyController");
@@ -20,12 +20,12 @@ schedule.scheduleJob({minute: 0}, () => {
     postRankingsController.rankingTweetUpdater(requestHoulyAndDailyRankings);
 });
 
-// Based on UTC, 17:02 Monday and Friday, 8 UTC = 17 JST , 11 UTC = 20 JST, 13 UTC = 22 JST.
-schedule.scheduleJob({minute: 2, hour: [8, 11, 13], dayOfWeek:[1,5]}, () => {
+// Based on UTC, 17:02 Monday and Friday, 23 UTC = 8 JST , 12 UTC = 21 JST.
+schedule.scheduleJob({minute: 2, hour: [23, 12]}, () => {
     postRankingsController.rankingTweetUpdater(requestWeeklyRankings);
 });
 
-// Based on UTC, 17:03 Friday, 8 UTC = 17 JST , 11 UTC = 20 JST, 13 UTC = 22 JST.
-schedule.scheduleJob({minute: 3, hour: [8, 11, 13], dayOfWeek:[5]}, () => {
+// Based on UTC, 17:03 Friday,12 UTC = 21 JST.
+schedule.scheduleJob({minute: 3, hour: [12], dayOfWeek:[1,3,5,0]}, () => {
     postRankingsController.rankingTweetUpdater(requestMonthlyRankings);
 });

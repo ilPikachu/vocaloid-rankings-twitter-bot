@@ -1,41 +1,50 @@
 "use strict";
 
-const fs = require("fs");
 const moment = require("moment-timezone");
 
-const rankingScraperModule = require("../../modules/niconico_scraper/rankingScraperModule")
-const tweetRankingsModule = require("../../modules/post_rankings_modules/tweetRankingModule")
+const rankingScraperService = require("../../services/rankingScraperService")
+const tweetRankingsService = require("../../services/post_rankings_services/tweetRankingService")
+const databaseQueryService = require("../../dataAccess/databaseQuery");
 
 module.exports = {
     rankingTweetUpdater: (requestedRankings) => {
-        const processedRankingFilePath = process.env.HOME + "/miku_twitter_bot/rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json"; 
-        if (!fs.existsSync(processedRankingFilePath)){
-            const promise = rankingScraperModule.getRankingData();
-            promise.then(() => {
-                tweetRankingsSelector(requestedRankings, processedRankingFilePath);
-            });
-                                                    
-        }else{
-            tweetRankingsSelector(requestedRankings, processedRankingFilePath);
-        }
+        const dbName = "vocadb";
+        const collectionName = "rankDataProceeded";
+        const value = moment().utc().format("YYYY-MM-DDTHH*");
+        const queryParameter = {lastUpdated: {$regex: value}};
+    
+        databaseQueryService.databaseQuery(dbName, collectionName, queryParameter).then(function(result){
+            tweetRankingsSelector(requestedRankings, result[0]);
+        }).catch(function(err){
+            if (err == "No matching result for query: " + JSON.stringify(queryParameter)){
+                const promise = rankingScraperService.getRankingData(dbName, collectionName);
+                promise.then((processedRanking) => {
+                    tweetRankingsSelector(requestedRankings, processedRanking);
+                }).catch((err) => {
+                    console.error(err);
+                });
+            } else{
+                console.error(err);
+            }
+        });
     }
 }
 
-const tweetRankingsSelector = (requestedRankings, processedRankingFilePath) => {
+const tweetRankingsSelector = (requestedRankings, processedRanking) => {
     console.log(requestedRankings);
     for (let i = 0; i < requestedRankings.length; i++){
         switch(requestedRankings[i]){
             case "hourly":
-                setTimeout(() => {tweetRankingsModule.hourlyRankingTweet(processedRankingFilePath)}, i*60*1000);
+                setTimeout(() => {tweetRankingsService.hourlyRankingTweet(processedRanking)}, i*60*1000);
                 break;
             case "daily":
-                setTimeout(() => {tweetRankingsModule.dailyRankingTweet(processedRankingFilePath)}, i*60*1000);
+                setTimeout(() => {tweetRankingsService.dailyRankingTweet(processedRanking)}, i*60*1000);
                 break;
             case "weekly":
-                setTimeout(() => {tweetRankingsModule.weeklyRankingTweet(processedRankingFilePath)}, i*60*1000);
+                setTimeout(() => {tweetRankingsService.weeklyRankingTweet(processedRanking)}, i*60*1000);
                 break;
             case "monthly":
-                setTimeout(() => {tweetRankingsModule.monthlyRankingTweet(processedRankingFilePath)}, i*60*1000);
+                setTimeout(() => {tweetRankingsService.monthlyRankingTweet(processedRanking)}, i*60*1000);
                 break;
             default:
                 console.error("Ranking request not supported");

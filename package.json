@@ -4,7 +4,8 @@
   "description": "This is a twitter bot that updates about niconico vocaloid rankings hourly",
   "main": "src/index.js",
   "scripts": {
-    "start": "forever start -a -l ~/miku_twitter_bot/logs/console_logs/console.log -o ~/miku_twitter_bot/logs/stdout_logs/stdout.log -e ~/miku_twitter_bot/logs/stderr_logs/stderr.log ~/miku_twitter_bot/src/index.js"
+    "start": "forever start -a -l ~/miku_twitter_bot/logs/console_logs/console.log -o ~/miku_twitter_bot/logs/stdout_logs/stdout.log -e ~/miku_twitter_bot/logs/stderr_logs/stderr.log ~/miku_twitter_bot/src/index.js",
+    "startdb": "mongod --fork --logpath ~/miku_twitter_bot/logs/mongodb_logs/mongodb.log --dbpath ~/miku_twitter_bot/data/db"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
     "jsdom": "^11.5.1",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
+    "mongodb": "^3.1.0",
     "node-schedule": "^1.2.5",
     "request": "^2.83.0",
     "twit": "^2.2.9"

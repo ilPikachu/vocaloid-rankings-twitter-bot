@@ -2,8 +2,9 @@
 
 const fs = require("fs");
 const moment = require("moment-timezone");
+const databaseQueryService = require("../dataAccess/databaseQuery");
 
-const rankingScraperModule = require("../niconico_scraper/rankingScraperModule")
+const rankingScraperService = require("./rankingScraperService")
 
 module.exports = {
     directMessageRequestBuilder: (directMessageType, userId) => {
@@ -35,21 +36,30 @@ const messageBuilder = (directMessageType) => {
     const processedRankingFilePath = process.env.HOME + "/miku_twitter_bot/rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json"; 
 
     return new Promise(function(resolve, reject){
-        if (fs.existsSync(processedRankingFilePath)){
-            resolve(createMessage(processedRankingFilePath, directMessageType));
-        }else{
-            const promise = rankingScraperModule.getRankingData();
-            promise.then(function(){
-                resolve(createMessage(processedRankingFilePath, directMessageType));
-            });
-        }
+        const dbName = "vocadb";
+        const collectionName = "rankDataProceeded";
+        const value = moment().utc().format("YYYY-MM-DDTHH*");
+        const queryParameter = {lastUpdated: {$regex: value}};
+
+        databaseQueryService.databaseQuery(dbName, collectionName, queryParameter).then(function(result){
+            resolve(createMessage(result[0], directMessageType));
+        }).catch(function(err){
+            if (err == "No matching result for query: " + JSON.stringify(queryParameter)){
+                const promise = rankingScraperService.getRankingData(dbName, collectionName);
+                promise.then((processedRanking) => {
+                    resolve(createMessage(processedRanking, directMessageType));
+                }).catch((err) => {
+                    console.error(err);
+                });
+            } else{
+                console.error(err);
+            }
+        });
     });
 };
 
-const createMessage = (processedRankingFilePath, directMessageType) =>{
-    const rankingLists = JSON.parse(fs.readFileSync(processedRankingFilePath));
-
-    const rankingListWithType = rankingLists[directMessageType];
+const createMessage = (processedRanking, directMessageType) =>{
+    const processedRankingWithType = processedRanking[directMessageType];
 
     let directMessage = "";
 
@@ -73,7 +83,7 @@ const createMessage = (processedRankingFilePath, directMessageType) =>{
     //Todo: User Specified ranking from top 1 to top 20
     for (let i = 1; i <= 10; i++){ 
         const rank = "rank" + String(i);
-        directMessage += String(i) + ". " + rankingListWithType[rank].title + "\n" + rankingListWithType[rank].uri + "\n";
+        directMessage += String(i) + ". " + processedRankingWithType[rank].title + "\n" + processedRankingWithType[rank].uri + "\n";
     }
         
     directMessage += moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");

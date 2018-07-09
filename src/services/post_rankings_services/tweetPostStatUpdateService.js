@@ -2,7 +2,7 @@
 
 const moment = require("moment-timezone");
 
-const twitUser = require("../../modules/twit_object_generator/twitObjectGeneratorModule");
+const twitUser = require("../twitObjectGeneratorService");
 
 module.exports = {
     tweetPostStatUpdate: (message, type) => {

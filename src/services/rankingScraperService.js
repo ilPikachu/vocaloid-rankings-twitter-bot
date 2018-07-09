@@ -1,16 +1,15 @@
 "use strict";
 
-const fs = require("fs");
 const moment = require("moment-timezone");
 const request = require("request");
 
-const saveRankingModule = require("../niconico_parser/saveRankingModule");
+const rankingParserService = require("./rankingParserService");
+const databaseInsert = require("../dataAccess/databaseInsert");
 
 const niconicoUrl = "http://ex.nicovideo.jp/vocaloid/ranking";
 
 module.exports = {
-    getRankingData: () => {
-        const rankingFilePath = process.env.HOME + "/miku_twitter_bot/rank_data/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".html";
+    getRankingData: (dbName, collectionName) => {
         return new Promise((resolve, reject) => {
             request(niconicoUrl, (error, response, body) => {
                 if (!!error){
@@ -19,19 +18,14 @@ module.exports = {
                     console.error(error.name);
                     console.error(error.message);
                     console.error('***RankingPageFetchErrorEnd***\n');  
-                    setTimeout(() => {getRankingDataRetry(rankingFilePath)}, 10*1000);
+                    setTimeout(() => {getRankingDataRetry(dbName, collectionName)}, 10*1000);
                 }
                 
                 else if (response.statusCode === 200){
-                    fs.writeFileSync(rankingFilePath, body);
-                    try{
-                        saveRankingModule.saveRankingLists(rankingFilePath);
-                        resolve();
-                    }
-                    catch(error){
-                        console.error(error.message);
-                        setTimeout(() => {getRankingDataRetry(rankingFilePath)}, 10*1000);  
-                    }   
+                    const processedRanking = rankingParserService.getRankingLists(body);
+                    databaseInsert.databaseInsertOne(dbName, collectionName, processedRanking).then(() => {
+                        resolve(processedRanking);
+                    });
                 }
                 
                 else{
@@ -40,14 +34,14 @@ module.exports = {
                     console.log("headers: " + response.headers);
                     console.log("body: "+ response.body);
                     console.log('***RankingPageFetchFailureEnd***\n');                                                            
-                    setTimeout(() => {getRankingDataRetry(rankingFilePath)}, 10*1000);  
+                    setTimeout(() => {getRankingDataRetry(dbName, collectionName)}, 10*1000);  
                 }   
             });
         });
     }
 }
 
-const getRankingDataRetry = (rankingFilePath) => {
+const getRankingDataRetry = (dbName, collectionName) => {
     return new Promise((resolve, reject) => {
         request(niconicoUrl, (error, response, body) => {
             if (!!error){
@@ -55,23 +49,16 @@ const getRankingDataRetry = (rankingFilePath) => {
                 console.error(moment().utc().format() + " Retry Ranking page fetch failure again. Error.");
                 console.error(error.name);
                 console.error(error.message);
-                console.log("Retry Ranking Page File Path: " + rankingFilePath);            
                 console.error('***RankingPageRetryErrorEnd***\n');
                 reject(moment().utc().format() + " Retry Ranking page fetch failure again. Error.");            
             }
 
             else if (response.statusCode === 200){
                 console.log(moment().utc().format() + " Ranking Page Retry Success");
-                console.log("Retry Ranking Page File Path: " + rankingFilePath + "\n");
-                fs.writeFileSync(rankingFilePath, body);
-                try{
-                    saveRankingModule.saveRankingLists(rankingFilePath);
-                    resolve();
-                }
-                catch(error){
-                    console.error(error.message);
-                    reject(moment().utc().format() + " Retry Ranking page fetch Success. But Ranking File Path Does Not Exist Error.");            
-                }                                  
+                const processedRanking = rankingParserService.getRankingLists(body);
+                databaseInsert.databaseInsertOne(dbName, collectionName, processedRanking).then(() => {
+                    resolve(processedRanking);
+                });                                   
             }
 
             else{
@@ -79,7 +66,6 @@ const getRankingDataRetry = (rankingFilePath) => {
                 console.log(moment().utc().format() + " Retry Ranking page fetch failure again. Status Code: " + response.statusCode + " " + response.statusMessage);
                 console.log("headers: " + response.headers);
                 console.log("body: "+ response.body);
-                console.log("Retry Ranking Page File Path: " + rankingFilePath);                        
                 console.log('***RankingPageRetryFailureEnd***\n');
                 reject(moment().utc().format() + " Retry Ranking page fetch failure again. Status Code: " + response.statusCode + " " + response.statusMessage);            
             }   
