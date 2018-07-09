@@ -1,5 +1,5 @@
 {
-  "name": "miku_twitter_bot",
+  "name": "vocaloid-rankings-twitter-bot",
   "version": "1.0.0",
   "description": "This is a twitter bot that updates about niconico vocaloid rankings hourly",
   "main": "src/index.js",
