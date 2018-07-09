@@ -2,9 +2,10 @@
 
 module.exports = {
     tweetTitleTruncater: (title) => {
-        //truncate within 28 characters, 98 base characters, 14 time unque string, floor((280 - 98 - 14) / 3) / 2 = 28
-        if (title.length > 28){
-            return title.substring(0, 28);
+        //availble characters: 280 - 3*23 (three links) - 6 (6 new line char) - 2*3 (1. 2. 3. char) - (8*2+1) (title for each ranking) = 182
+        //truncate within 30 characters, floor(182 / 3 / 2 ) = 30
+        if (title.length > 30){
+            return title.substring(0, 30);
         }else{
             return title;
         }
