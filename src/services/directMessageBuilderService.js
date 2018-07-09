@@ -38,7 +38,7 @@ const messageBuilder = (directMessageType) => {
     return new Promise(function(resolve, reject){
         const dbName = "vocadb";
         const collectionName = "rankDataProceeded";
-        const value = moment().utc().format("YYYY-MM-DDTHH*");
+        const value = moment().utc().format("YYYY-MM-DDTHH");
         const queryParameter = {lastUpdated: {$regex: value}};
 
         databaseQueryService.databaseQuery(dbName, collectionName, queryParameter).then(function(result){
