@@ -16,6 +16,7 @@ stream.on("follow", followBackUsersController.followBack);
 
 stream.on("direct_message", directMessageReplyController.directMessageReply);
 
+/*
 schedule.scheduleJob({minute: 0}, () => {
     postRankingsController.rankingTweetUpdater(requestHoulyAndDailyRankings);
 });
@@ -29,3 +30,4 @@ schedule.scheduleJob({minute: 2, hour: [8, 11, 13], dayOfWeek:[1,5]}, () => {
 schedule.scheduleJob({minute: 3, hour: [8, 11, 13], dayOfWeek:[5]}, () => {
     postRankingsController.rankingTweetUpdater(requestMonthlyRankings);
 });
+*/
