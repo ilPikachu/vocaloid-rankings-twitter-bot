@@ -33,8 +33,6 @@ module.exports = {
 }
 
 const messageBuilder = (directMessageType) => {
-    const processedRankingFilePath = process.env.HOME + "/miku_twitter_bot/rank_data_proceeded/vocaloid_ranking" + moment().utc().format("_YYYY_MM_DD_HH") + ".json"; 
-
     return new Promise(function(resolve, reject){
         const dbName = "vocadb";
         const collectionName = "rankDataProceeded";
