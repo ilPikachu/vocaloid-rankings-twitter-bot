@@ -13,6 +13,3 @@ The Vocaloid Rankings Twitter Bot is developed using Nodejs and MongoDB with lay
 - Nodejs
 - MongoDB
 - AWS
-
-## LICENSE
-[MIT](https://github.com/ilPikachu/vocaloid-rankings-twitter-bot/blob/master/LICENSE)
