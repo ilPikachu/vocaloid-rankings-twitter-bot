@@ -29,19 +29,19 @@ module.exports = {
             
         const hourlyRankingHtmlList = rankingHtmlLists.item(0).getElementsByClassName("box");
         const dailyRankingHtmlList = rankingHtmlLists.item(1).getElementsByClassName("box");
-        const weeklyRankingHtmlList = rankingHtmlLists.item(2).getElementsByClassName("box");
-        const monthlyRankingHtmlList = rankingHtmlLists.item(3).getElementsByClassName("box");
+        //const weeklyRankingHtmlList = rankingHtmlLists.item(2).getElementsByClassName("box");
+        //const monthlyRankingHtmlList = rankingHtmlLists.item(3).getElementsByClassName("box");
 
         const hourlyRankingList = createRankingList(hourlyRankingHtmlList);
         const dailyRankingList = createRankingList(dailyRankingHtmlList);
-        const weeklyRankingList = createRankingList(weeklyRankingHtmlList);
-        const monthlyRankingList = createRankingList(monthlyRankingHtmlList);
+        //const weeklyRankingList = createRankingList(weeklyRankingHtmlList);
+        //const monthlyRankingList = createRankingList(monthlyRankingHtmlList);
             
         const rankingLists = {
             "hourly": hourlyRankingList,
             "daily": dailyRankingList,
-            "weekly": weeklyRankingList,
-            "monthly": monthlyRankingList,
+            //"weekly": weeklyRankingList,
+            //"monthly": monthlyRankingList,
             "lastUpdated": moment().utc().format()
         };
 
