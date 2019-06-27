@@ -9,8 +9,8 @@ const directMessageReplyController= require("./controllers/direct_message_reply/
 //const stream = twitUser.stream("user");
 
 const requestHoulyAndDailyRankings = ["daily", "hourly"];
-const requestWeeklyRankings = ["weekly"];
-const requestMonthlyRankings = ["monthly"];
+//const requestWeeklyRankings = ["weekly"];
+//const requestMonthlyRankings = ["monthly"];
 
 //stream.on("follow", followBackUsersController.followBack);
 
@@ -20,6 +20,8 @@ schedule.scheduleJob({minute: 0}, () => {
     postRankingsController.rankingTweetUpdater(requestHoulyAndDailyRankings);
 });
 
+// Removed due to removal of Weekly and Monthly rankings on http://ex.nicovideo.jp/vocaloid/ranking 
+/*
 // Based on UTC, 17:02 Monday and Friday, 23 UTC = 8 JST , 12 UTC = 21 JST.
 schedule.scheduleJob({minute: 2, hour: [23, 12]}, () => {
     postRankingsController.rankingTweetUpdater(requestWeeklyRankings);
@@ -29,3 +31,4 @@ schedule.scheduleJob({minute: 2, hour: [23, 12]}, () => {
 schedule.scheduleJob({minute: 3, hour: [12], dayOfWeek:[1,3,5,0]}, () => {
     postRankingsController.rankingTweetUpdater(requestMonthlyRankings);
 });
+*/
