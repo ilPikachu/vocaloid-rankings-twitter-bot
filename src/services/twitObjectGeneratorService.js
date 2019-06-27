@@ -3,7 +3,7 @@
 const Twit = require("twit");
 const fs = require("fs");
 
-const secrets = JSON.parse(fs.readFileSync(process.env.HOME + "/miku_twitter_bot/src/utilities/secrets.json"));
+const secrets = JSON.parse(fs.readFileSync(process.env.HOME + "/Documents/vocaloid-rankings-twitter-bot/src/utilities/secrets.json"));
 
 const twitAuth = {
     consumer_key:         secrets.twitter.consumer_key,

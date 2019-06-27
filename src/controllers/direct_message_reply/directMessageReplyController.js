@@ -6,7 +6,7 @@ const moment = require("moment-timezone");
 const twitUser = require("../../services/twitObjectGeneratorService");
 const directMessageBuilderService = require("../../services/directMessageBuilderService");
 
-const directMessagekeywords = JSON.parse(fs.readFileSync(process.env.HOME + "/miku_twitter_bot/src/utilities/directMessageStrings.json"));
+const directMessagekeywords = JSON.parse(fs.readFileSync(process.env.HOME + "/Documents/vocaloid-rankings-twitter-bot/src/utilities/directMessageStrings.json"));
 
 module.exports = {
     directMessageReply: (event) => {

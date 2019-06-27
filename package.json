@@ -4,19 +4,19 @@
   "description": "This is a twitter bot that updates about niconico vocaloid rankings hourly",
   "main": "src/index.js",
   "scripts": {
-    "start": "forever start -a -l ~/miku_twitter_bot/logs/console_logs/console.log -o ~/miku_twitter_bot/logs/stdout_logs/stdout.log -e ~/miku_twitter_bot/logs/stderr_logs/stderr.log ~/miku_twitter_bot/src/index.js",
-    "startdb": "mongod --fork --logpath ~/miku_twitter_bot/logs/mongodb_logs/mongodb.log --dbpath ~/miku_twitter_bot/data/db"
+    "start": "forever start -a -l ~/Documents/vocaloid-rankings-twitter-bot/logs/console_logs/console.log -o ~/Documents/vocaloid-rankings-twitter-bot/logs/stdout_logs/stdout.log -e ~/Documents/vocaloid-rankings-twitter-bot/logs/stderr_logs/stderr.log ~/Documents/vocaloid-rankings-twitter-bot/src/index.js",
+    "startdb": "mongod --fork --logpath ~/Documents/vocaloid-rankings-twitter-bot/logs/mongodb_logs/mongodb.log --dbpath ~/Documents/vocaloid-rankings-twitter-bot/data/db"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ilPikachu/miku_twitter_bot.git"
+    "url": "git+https://github.com/ilPikachu/Documents/vocaloid-rankings-twitter-bot.git"
   },
   "author": "ilPikachu",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ilPikachu/miku_twitter_bot/issues"
+    "url": "https://github.com/ilPikachu/Documents/vocaloid-rankings-twitter-bot/issues"
   },
-  "homepage": "https://github.com/ilPikachu/miku_twitter_bot#readme",
+  "homepage": "https://github.com/ilPikachu/Documents/vocaloid-rankings-twitter-bot#readme",
   "dependencies": {
     "forever": "^0.15.3",
     "jsdom": "^11.5.1",
