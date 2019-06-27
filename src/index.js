@@ -6,15 +6,15 @@ const postRankingsController = require("./controllers/post_rankings/postRankings
 const followBackUsersController = require("./controllers/follow_back_users/followBackUsersController");
 const directMessageReplyController= require("./controllers/direct_message_reply/directMessageReplyController");
 
-const stream = twitUser.stream("user");
+//const stream = twitUser.stream("user");
 
 const requestHoulyAndDailyRankings = ["daily", "hourly"];
 //const requestWeeklyRankings = ["weekly"];
 //const requestMonthlyRankings = ["monthly"];
 
-stream.on("follow", followBackUsersController.followBack);
+//stream.on("follow", followBackUsersController.followBack);
 
-stream.on("direct_message", directMessageReplyController.directMessageReply);
+//stream.on("direct_message", directMessageReplyController.directMessageReply);
 
 schedule.scheduleJob({minute: 0}, () => {
     postRankingsController.rankingTweetUpdater(requestHoulyAndDailyRankings);
