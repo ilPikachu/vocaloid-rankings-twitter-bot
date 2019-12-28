@@ -4,7 +4,7 @@ The Vocaloid Rankings Twitter Bot is developed using Nodejs and MongoDB with lay
 This project is created to let people discover the latest trending Vocaloid songs and help Vocaloid content creators to self-promote their songs. The bot reaches an average of 200K impressions per month. 
 
 ## OPEATIONAL TWITTER PAGE
-[![alt text](https://i.imgur.com/1JiADWG.png "@mikuchan_info")](https://twitter.com/voca_ranking)[@voca_ranking](https://twitter.com/voca_ranking)
+[![Twitter Follow](https://img.shields.io/twitter/follow/voca_ranking.svg?style=social&label=Follow)](https://twitter.com/voca_ranking)
 
 ## Functionalities
 - Automatic tweet niconico vocaloid rankings every hour.
