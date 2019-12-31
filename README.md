@@ -8,6 +8,11 @@ The Vocaloid Rankings Twitter Bot is developed using Nodejs and MongoDB with lay
 
 This project is created to let people discover the latest trending Vocaloid songs and help Vocaloid content creators to self-promote their songs. The bot reaches an average of 200K impressions per month. 
 
+## To start
+`npm run startdb`
+
+`npm start`
+
 ## Functionalities
 - Automatic tweet niconico vocaloid rankings every hour.
 - Automatic reply latest rankings via direct message.
@@ -16,4 +21,3 @@ This project is created to let people discover the latest trending Vocaloid song
 ## Technologies
 - Nodejs
 - MongoDB
-- AWS
