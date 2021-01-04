@@ -5,7 +5,9 @@
 
 The Vocaloid Rankings Twitter Bot post Vocaloid music rankings from Niconico every hour.
 
-This project is created to let people discover the latest trending Vocaloid songs and help Vocaloid content creators to self-promote their songs. The bot reaches an average of 200K impressions per month. 
+Let people discover the latest trending Vocaloid songs and help Vocaloid content creators to self-promote their songs in order to reach to a wider audience.
+
+The bot reaches an average of 200K impressions per month. 
 
 ## To start
 `npm run startdb`
