@@ -6,15 +6,8 @@ const rankingScraperService = require("../../services/rankingScraperService")
 const tweetRankingsService = require("../../services/post_rankings_services/tweetRankingService")
 const databaseQueryService = require("../../dataAccess/databaseQuery");
 
-const Term = Object.freeze({
-    HOURLY: "hour",
-    DAILY: "24h",
-    WEEKLY: "week",
-    MONTHLY: "month",
-});
-
 module.exports = {
-    rankingTweetUpdater: (requestedRankings) => {
+    rankingTweetUpdater: (requestedTerms) => {
         /*
         const dbName = "vocadb";
         const collectionName = "rankDataProceeded";
@@ -40,45 +33,16 @@ module.exports = {
         // TODO: Update DB cache mechanism, not really useful right now as direct messaging is broken anyways
        const dbName = "vocadb";
        const collectionName = "rankDataProceeded";
-       tweetRankingsSelector(dbName, collectionName, requestedRankings);
-    },
-    Term
+       tweetRankingsSelector(dbName, collectionName, requestedTerms);
+    }
 }
 
-const tweetRankingsSelector = (dbName, collectionName, requestedRankings) => {
-    for (let i = 0; i < requestedRankings.length; i++){
-        switch(requestedRankings[i]){
-            case Term.HOURLY:
-                rankingScraperService.getRankingData(dbName, collectionName, Term.HOURLY).then((processedRanking) => {
-                    setTimeout(() => {tweetRankingsService.hourlyRankingTweet(processedRanking)}, i*60*1000);
-                }).catch((err) => {
-                    console.error(err);
-                });
-                break;
-            case Term.DAILY:
-                rankingScraperService.getRankingData(dbName, collectionName, Term.DAILY).then((processedRanking) => {
-                    setTimeout(() => {tweetRankingsService.dailyRankingTweet(processedRanking)}, i*60*1000);
-                }).catch((err) => {
-                    console.error(err);
-                });
-                break;
-            case Term.WEEKLY:
-                rankingScraperService.getRankingData(dbName, collectionName, Term.WEEKLY).then((processedRanking) => {
-                    setTimeout(() => {tweetRankingsService.weeklyRankingTweet(processedRanking)}, i*60*1000);
-                }).catch((err) => {
-                    console.error(err);
-                });
-                break;
-            case Term.MONTHLY:
-                rankingScraperService.getRankingData(dbName, collectionName, Term.MONTHLY).then((processedRanking) => {
-                    setTimeout(() => {tweetRankingsService.monthlyRankingTweet(processedRanking)}, i*60*1000);
-                }).catch((err) => {
-                    console.error(err);
-                });
-                break;
-            default:
-                console.error(requestedRankings[i]);
-                console.error("Ranking request not supported");
-        }
+const tweetRankingsSelector = (dbName, collectionName, requestedTerms) => {
+    for (let i = 0; i < requestedTerms.length; i++){
+        rankingScraperService.getRankingData(dbName, collectionName, requestedTerms[i]).then((processedRanking) => {
+            setTimeout(() => {tweetRankingsService.rankingTweet(processedRanking, requestedTerms[i])}, i*60*1000);
+        }).catch((err) => {
+            console.error(err);
+        });
     }
 };

@@ -3,13 +3,13 @@
 const schedule = require("node-schedule");
 const twitUser = require("./services/twitObjectGeneratorService");
 const postRankingsController = require("./controllers/post_rankings/postRankingsController");
-const Term = postRankingsController.Term;
+const Term = require("./common/term");
 const followBackUsersController = require("./controllers/follow_back_users/followBackUsersController");
 const directMessageReplyController= require("./controllers/direct_message_reply/directMessageReplyController");
 
 //const stream = twitUser.stream("user");
 
-const requestHoulyAndDailyRankings = [Term.DAILY, Term.HOURLY];
+const houlyAndDailyTerms = [Term.DAILY, Term.HOURLY];
 //const requestWeeklyRankings = ["weekly"];
 //const requestMonthlyRankings = ["monthly"];
 
@@ -18,10 +18,10 @@ const requestHoulyAndDailyRankings = [Term.DAILY, Term.HOURLY];
 //stream.on("direct_message", directMessageReplyController.directMessageReply);
 
 schedule.scheduleJob({minute: 0}, () => {
-    postRankingsController.rankingTweetUpdater(requestHoulyAndDailyRankings);
+    postRankingsController.rankingTweetUpdater(houlyAndDailyTerms);
 });
 
-postRankingsController.rankingTweetUpdater(requestHoulyAndDailyRankings);
+postRankingsController.rankingTweetUpdater(houlyAndDailyTerms);
 
 /*
 // Based on UTC, 17:02 Monday and Friday, 23 UTC = 8 JST , 12 UTC = 21 JST.
