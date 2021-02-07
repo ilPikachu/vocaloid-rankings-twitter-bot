@@ -12,7 +12,7 @@ module.exports = {
                         reject(err);
                     }
                     else{
-                        resolve(res);
+                        resolve(insertDocument);
                     }
                 });
             });
@@ -29,7 +29,7 @@ module.exports = {
                         reject(err);
                     }
                     else{
-                        resolve(res);
+                        resolve(insertDocuments);
                     }
                 });
             });

@@ -43,6 +43,7 @@ const messageBuilder = (directMessageType) => {
             resolve(createMessage(result[0], directMessageType));
         }).catch(function(err){
             if (err == "No matching result for query: " + JSON.stringify(queryParameter)){
+                // TODO: Update once direct message is supported
                 const promise = rankingScraperService.getRankingData(dbName, collectionName);
                 promise.then((processedRanking) => {
                     resolve(createMessage(processedRanking, directMessageType));
