@@ -19,7 +19,7 @@ module.exports = {
                     console.error(error.message);
                     console.error('***RankingPageFetchErrorEnd***\n');  
 
-                    setTimeout(() => {getRankingDataRetry(dbName, collectionName).then((rankingList) => {
+                    setTimeout(() => {getRankingDataRetry(dbName, collectionName, rankingUrl).then((rankingList) => {
                         resolve(rankingList);
                     }).catch((err) => {
                         reject(err);
@@ -28,7 +28,7 @@ module.exports = {
                 
                 else if (response.statusCode === 200){
                     rankingParserService.getRankingLists(body).then((rankingList) => {
-                        databaseInsert.databaseInsertOne(dbName, collectionName, rankingList);
+                        return databaseInsert.databaseInsertOne(dbName, collectionName, rankingList);
                     }).then((rankingList) => {
                         resolve(rankingList);
                     }).catch((err) => {
@@ -41,8 +41,8 @@ module.exports = {
                     console.error(moment().utc().format() + " Ranking Page Fetch Failure. Status Code: " + response.statusCode + " " + response.statusMessage);
                     console.error("headers: " + response.headers);
                     console.error("body: "+ response.body);
-                    console.error('***RankingPageFetchFailureEnd***\n');      
-
+                    console.error('***RankingPageFetchFailureEnd***\n');    
+                    
                     setTimeout(() => {getRankingDataRetry(dbName, collectionName, rankingUrl).then((rankingList) => {
                         resolve(rankingList);
                     }).catch((err) => {
@@ -69,7 +69,7 @@ const getRankingDataRetry = (dbName, collectionName, rankingUrl) => {
             else if (response.statusCode === 200){
                 console.log(moment().utc().format() + " Ranking Page Retry Success");
                 rankingParserService.getRankingLists(body).then((rankingList) => {
-                    databaseInsert.databaseInsertOne(dbName, collectionName, rankingList);
+                    return databaseInsert.databaseInsertOne(dbName, collectionName, rankingList);
                 }).then((rankingList) => {
                     resolve(rankingList);
                 }).catch((err) => {

@@ -45,7 +45,7 @@ module.exports = {
     Term
 }
 
-const tweetRankingsSelector = (requestedRankings) => {
+const tweetRankingsSelector = (dbName, collectionName, requestedRankings) => {
     for (let i = 0; i < requestedRankings.length; i++){
         switch(requestedRankings[i]){
             case Term.HOURLY:
@@ -77,6 +77,7 @@ const tweetRankingsSelector = (requestedRankings) => {
                 });
                 break;
             default:
+                console.error(requestedRankings[i]);
                 console.error("Ranking request not supported");
         }
     }
