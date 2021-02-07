@@ -8,6 +8,17 @@ const databaseQueryService = require("../../dataAccess/databaseQuery");
 
 module.exports = {
     rankingTweetUpdater: (requestedTerms) => {
+        // TODO: Update DB cache mechanism, not really useful right now as direct messaging is broken anyways
+        const dbName = "vocadb";
+        const collectionName = "rankDataProceeded";
+        for (let i = 0; i < requestedTerms.length; i++) {
+            rankingScraperService.getRankingData(dbName, collectionName, requestedTerms[i]).then((processedRanking) => {
+                setTimeout(() => {tweetRankingsService.rankingTweet(processedRanking, requestedTerms[i])}, i*60*1000);
+            }).catch((err) => {
+                console.error(err);
+            });
+        }
+        
         /*
         const dbName = "vocadb";
         const collectionName = "rankDataProceeded";
@@ -29,20 +40,6 @@ module.exports = {
             }
         });
         */
-
-        // TODO: Update DB cache mechanism, not really useful right now as direct messaging is broken anyways
-       const dbName = "vocadb";
-       const collectionName = "rankDataProceeded";
-       tweetRankingsSelector(dbName, collectionName, requestedTerms);
     }
 }
 
-const tweetRankingsSelector = (dbName, collectionName, requestedTerms) => {
-    for (let i = 0; i < requestedTerms.length; i++){
-        rankingScraperService.getRankingData(dbName, collectionName, requestedTerms[i]).then((processedRanking) => {
-            setTimeout(() => {tweetRankingsService.rankingTweet(processedRanking, requestedTerms[i])}, i*60*1000);
-        }).catch((err) => {
-            console.error(err);
-        });
-    }
-};
