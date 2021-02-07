@@ -21,8 +21,6 @@ schedule.scheduleJob({minute: 0}, () => {
     postRankingsController.rankingTweetUpdater(houlyAndDailyTerms);
 });
 
-postRankingsController.rankingTweetUpdater(houlyAndDailyTerms);
-
 /*
 // Based on UTC, 17:02 Monday and Friday, 23 UTC = 8 JST , 12 UTC = 21 JST.
 schedule.scheduleJob({minute: 2, hour: [23, 12]}, () => {

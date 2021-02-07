@@ -8,19 +8,19 @@ const Term = require("../../common/term");
 
 module.exports = {
     rankingTweet: (processedRanking, type) => {
-        let tweetTitle = "" 
+        let tweetTitle = ""; 
         switch(type){
             case Term.HOURLY:
-                tweetTitle = tweet.concat("毎時ランキング\n\n");
+                tweetTitle = "毎時ランキング\n\n";
                 break;
             case Term.DAILY:
-                tweetTitle = tweet.concat("24時間ランキング\n\n");
+                tweetTitle = "24時間ランキング\n\n";
                 break;
             case Term.WEEKLY:
-                tweetTitle = tweet.concat("週間ランキング\n\n");
+                tweetTitle = "週間ランキング\n\n";
                 break;
             case Term.MONTHLY:
-                tweetTitle = tweet.concat("月間ランキング\n\n");
+                tweetTitle = "月間ランキング\n\n";
                 break;
             default:
                 console.error("Ranking request not supported");
