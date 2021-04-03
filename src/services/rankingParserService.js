@@ -11,7 +11,7 @@ const createRankingList = (rssRankingList) => {
     for (let i = 0; i < rssRankingList.length; i++){
         rankingList["rank" + String(i + 1)] = {};
         rankingList["rank" + String(i + 1)]["rank"] = i+1;
-        rankingList["rank" + String(i + 1)]["uri"] = rssRankingList[i].link[0];
+        rankingList["rank" + String(i + 1)]["uri"] = rssRankingList[i].link[0].split('?')[0];
         rankingList["rank" + String(i + 1)]["title"] = rssRankingList[i].title[0];
     }
     
