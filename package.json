@@ -2,10 +2,9 @@
   "name": "vocaloid-rankings-twitter-bot",
   "version": "1.0.0",
   "description": "This is a twitter bot that updates about niconico vocaloid rankings hourly",
-  "main": "src/index.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "forever start -a -l ~/Documents/vocaloid-rankings-twitter-bot/logs/console_logs/console.log -o ~/Documents/vocaloid-rankings-twitter-bot/logs/stdout_logs/stdout.log -e ~/Documents/vocaloid-rankings-twitter-bot/logs/stderr_logs/stderr.log ~/Documents/vocaloid-rankings-twitter-bot/src/index.js",
-    "startdb": "mongod --fork --logpath ~/Documents/vocaloid-rankings-twitter-bot/logs/mongodb_logs/mongodb.log --dbpath ~/Documents/vocaloid-rankings-twitter-bot/data/db"
+    "start": "forever start -a -l ~/Documents/vocaloid-rankings-twitter-bot/logs/console_logs/console.log -o ~/Documents/vocaloid-rankings-twitter-bot/logs/stdout_logs/stdout.log -e ~/Documents/vocaloid-rankings-twitter-bot/logs/stderr_logs/stderr.log ~/Documents/vocaloid-rankings-twitter-bot/src/app.js"
   },
   "repository": {
     "type": "git",
@@ -18,19 +17,19 @@
   },
   "homepage": "https://github.com/ilPikachu/Documents/vocaloid-rankings-twitter-bot#readme",
   "dependencies": {
-    "forever": "^0.15.3",
-    "jsdom": "^11.5.1",
-    "moment": "^2.20.1",
-    "moment-timezone": "^0.5.14",
-    "mongodb": "^3.1.0",
-    "node-schedule": "^1.2.5",
+    "forever": "^3.0.4",
+    "jsdom": "^16.5.3",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
+    "mongodb": "^3.6.6",
+    "node-schedule": "^2.0.0",
     "request": "^2.83.0",
-    "twit": "^2.2.9",
+    "twit": "^2.2.11",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "eslint": "^5.0.1",
-    "mocha": "^5.2.0"
+    "chai": "^4.3.4",
+    "eslint": "^7.25.0",
+    "mocha": "^8.3.2"
   }
 }

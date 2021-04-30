@@ -4,10 +4,9 @@ const moment = require("moment-timezone");
 const request = require("request");
 
 const rankingParserService = require("./rankingParserService");
-const databaseInsert = require("../dataAccess/databaseInsert");
 
 module.exports = {
-    getRankingData: (dbName, collectionName, term) => {
+    getRankingData: (term) => {
         const rankingUrl = `https://www.nicovideo.jp/ranking/genre/music_sound?term=${term}&tag=VOCALOID&rss=2.0&lang=ja-jp`;
 
         return new Promise((resolve, reject) => {
@@ -19,7 +18,7 @@ module.exports = {
                     console.error(error.message);
                     console.error('***RankingPageFetchErrorEnd***\n');  
 
-                    setTimeout(() => {getRankingDataRetry(dbName, collectionName, rankingUrl).then((rankingList) => {
+                    setTimeout(() => {getRankingDataRetry(rankingUrl).then((rankingList) => {
                         resolve(rankingList);
                     }).catch((err) => {
                         reject(err);
@@ -28,8 +27,6 @@ module.exports = {
                 
                 else if (response.statusCode === 200){
                     rankingParserService.getRankingLists(body).then((rankingList) => {
-                        return databaseInsert.databaseInsertOne(dbName, collectionName, rankingList);
-                    }).then((rankingList) => {
                         resolve(rankingList);
                     }).catch((err) => {
                         reject(err);
@@ -43,7 +40,7 @@ module.exports = {
                     console.error("body: "+ response.body);
                     console.error('***RankingPageFetchFailureEnd***\n');    
                     
-                    setTimeout(() => {getRankingDataRetry(dbName, collectionName, rankingUrl).then((rankingList) => {
+                    setTimeout(() => {getRankingDataRetry(rankingUrl).then((rankingList) => {
                         resolve(rankingList);
                     }).catch((err) => {
                         reject(err);
@@ -54,7 +51,7 @@ module.exports = {
     }
 }
 
-const getRankingDataRetry = (dbName, collectionName, rankingUrl) => {
+const getRankingDataRetry = (rankingUrl) => {
     return new Promise((resolve, reject) => {
         request(rankingUrl, (error, response, body) => {
             if (!!error){
@@ -69,8 +66,6 @@ const getRankingDataRetry = (dbName, collectionName, rankingUrl) => {
             else if (response.statusCode === 200){
                 console.log(moment().utc().format() + " Ranking Page Retry Success");
                 rankingParserService.getRankingLists(body).then((rankingList) => {
-                    return databaseInsert.databaseInsertOne(dbName, collectionName, rankingList);
-                }).then((rankingList) => {
                     resolve(rankingList);
                 }).catch((err) => {
                     reject(err);
