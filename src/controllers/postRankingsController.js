@@ -1,7 +1,7 @@
 "use strict";
 
-const rankingScraperService = require("../../services/rankingScraperService")
-const tweetRankingsService = require("../../services/post_rankings_services/tweetRankingService")
+const rankingScraperService = require("../services/rankingScraperService")
+const tweetRankingsService = require("../services/tweetRankingService")
 
 module.exports = {
     rankingTweetUpdater: (requestedTerms) => {

@@ -3,8 +3,8 @@
 const moment = require("moment-timezone");
 
 const tweetPostStatUpdateService = require("./tweetPostStatUpdateService");
-const tweetTitleTruncaterService = require("../tweetTitleTruncaterService");
-const Term = require("../../common/term");
+const tweetTitleTruncaterService = require("../utilities/tweetTitleTruncater");
+const Term = require("../common/term");
 
 module.exports = {
     rankingTweet: (processedRanking, type) => {
