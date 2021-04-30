@@ -12,6 +12,9 @@ data/db
 # Dependency directories
 node_modules/
 
+# TS generated
+dist/
+
 # Mac OS generated
 .DS_Store
 .DS_Store?

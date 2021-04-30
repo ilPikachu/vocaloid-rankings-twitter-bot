@@ -4,7 +4,7 @@
   "description": "This is a twitter bot that updates about niconico vocaloid rankings hourly",
   "main": "src/app.js",
   "scripts": {
-    "start": "forever start -a -l ~/Documents/vocaloid-rankings-twitter-bot/logs/console_logs/console.log -o ~/Documents/vocaloid-rankings-twitter-bot/logs/stdout_logs/stdout.log -e ~/Documents/vocaloid-rankings-twitter-bot/logs/stderr_logs/stderr.log ~/Documents/vocaloid-rankings-twitter-bot/src/app.js"
+    "start": "npx tsc && forever start -a -l ~/Documents/vocaloid-rankings-twitter-bot/logs/console_logs/console.log -o ~/Documents/vocaloid-rankings-twitter-bot/logs/stdout_logs/stdout.log -e ~/Documents/vocaloid-rankings-twitter-bot/logs/stderr_logs/stderr.log ~/Documents/vocaloid-rankings-twitter-bot/dist/app.js"
   },
   "repository": {
     "type": "git",
@@ -28,8 +28,11 @@
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
+    "@types/node": "^15.0.1",
+    "@types/node-schedule": "^1.3.1",
     "chai": "^4.3.4",
     "eslint": "^7.25.0",
-    "mocha": "^8.3.2"
+    "mocha": "^8.3.2",
+    "typescript": "^4.2.4"
   }
 }
