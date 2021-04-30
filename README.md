@@ -10,6 +10,4 @@ Let people discover the latest trending Vocaloid songs and help Vocaloid content
 The bot reaches an average of 350K impressions per month. 
 
 ## To start
-`npm run startdb`
-
 `npm start`
