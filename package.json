@@ -1,21 +1,21 @@
 {
   "name": "vocaloid-rankings-twitter-bot",
   "version": "1.0.0",
-  "description": "This is a twitter bot that updates about niconico vocaloid rankings hourly",
-  "main": "src/app.js",
+  "description": "Vocaloid songs ranking twitter bot, hourly updated tweets.",
+  "main": "dist/app.js",
   "scripts": {
     "start": "npx tsc && forever start -a -l ~/Documents/vocaloid-rankings-twitter-bot/logs/console_logs/console.log -o ~/Documents/vocaloid-rankings-twitter-bot/logs/stdout_logs/stdout.log -e ~/Documents/vocaloid-rankings-twitter-bot/logs/stderr_logs/stderr.log ~/Documents/vocaloid-rankings-twitter-bot/dist/app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ilPikachu/Documents/vocaloid-rankings-twitter-bot.git"
+    "url": "git+https://github.com/ilPikachu/vocaloid-rankings-twitter-bot.git"
   },
   "author": "ilPikachu",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ilPikachu/Documents/vocaloid-rankings-twitter-bot/issues"
+    "url": "https://github.com/ilPikachu/vocaloid-rankings-twitter-bot/issues"
   },
-  "homepage": "https://github.com/ilPikachu/Documents/vocaloid-rankings-twitter-bot#readme",
+  "homepage": "https://github.com/ilPikachu/vocaloid-rankings-twitter-bot#readme",
   "dependencies": {
     "forever": "^3.0.4",
     "jsdom": "^16.5.3",
