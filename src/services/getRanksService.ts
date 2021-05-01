@@ -2,10 +2,10 @@ import moment from "moment-timezone";
 import request from "request";
 import Term from "../common/Term";
 import RankList from "../common/RankList";
-import getRankingLists from "./rankingParserService";
+import getParsedRanks from "./parseRanksService";
 import logFailure from "../utilities/log";
 
-const getRankingData = (term: Term): Promise<RankList> => {
+const getRanks = (term: Term): Promise<RankList> => {
     const rankingUrl = `https://www.nicovideo.jp/ranking/genre/music_sound?term=${term}&tag=VOCALOID&rss=2.0&lang=ja-jp`;
 
     return new Promise((resolve, reject) => {
@@ -13,23 +13,23 @@ const getRankingData = (term: Term): Promise<RankList> => {
             const currentTime = moment().utc().format();
             if (!!error){
                 logFailure(`${currentTime} Rank Fetch Failure.`, error.name, error.message);
-                setTimeout(() => {getRankingDataRetry(rankingUrl).then((rankingList) => {
-                    resolve(rankingList);
+                setTimeout(() => {getRanksRetry(rankingUrl).then((pasedRanks) => {
+                    resolve(pasedRanks);
                 }).catch((err) => {
                     reject(err);
                 })}, 10*1000);  
             }
             else if (response.statusCode === 200){
-                getRankingLists(body).then((rankingList) => {
-                    resolve(rankingList);
+                getParsedRanks(body).then((pasedRanks) => {
+                    resolve(pasedRanks);
                 }).catch((err) => {
                     reject(err);
                 })
             }
             else{
                 logFailure(`${currentTime} Rank Fetch Failure. ${response.statusCode}`);
-                setTimeout(() => {getRankingDataRetry(rankingUrl).then((rankingList) => {
-                    resolve(rankingList);
+                setTimeout(() => {getRanksRetry(rankingUrl).then((pasedRanks) => {
+                    resolve(pasedRanks);
                 }).catch((err) => {
                     reject(err);
                 })}, 10*1000);  
@@ -38,7 +38,7 @@ const getRankingData = (term: Term): Promise<RankList> => {
     });
 }
 
-const getRankingDataRetry = (rankingUrl: string): Promise<RankList> => {
+const getRanksRetry = (rankingUrl: string): Promise<RankList> => {
     return new Promise((resolve, reject) => {
         request(rankingUrl, (error, response, body) => {
             const currentTime = moment().utc().format();
@@ -49,8 +49,8 @@ const getRankingDataRetry = (rankingUrl: string): Promise<RankList> => {
             }
             else if (response.statusCode === 200){
                 console.log(`${currentTime} Retry Rank Fetch Success`);
-                getRankingLists(body).then((rankingList) => {
-                    resolve(rankingList);
+                getParsedRanks(body).then((pasedRanks) => {
+                    resolve(pasedRanks);
                 }).catch((err) => {
                     reject(err);
                 })
@@ -64,4 +64,4 @@ const getRankingDataRetry = (rankingUrl: string): Promise<RankList> => {
     });
 };
 
-export default getRankingData;
+export default getRanks;

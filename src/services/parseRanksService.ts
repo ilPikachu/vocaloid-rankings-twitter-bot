@@ -10,31 +10,31 @@ interface RssRank {
     description: string[];
 }
 
-const createRankingList = (rssRankingList: RssRank[]) => {
-    const rankingList: RankList = {
+const parseRanks = (rssRankList: RssRank[]) => {
+    const pasedRanks: RankList = {
         ranks: {},
         lastUpdated: moment().utc().format(),
     };
 
-    for (let i = 0; i < rssRankingList.length; i++) {
-        rankingList.ranks["rank" + String(i + 1)] = {
+    for (let i = 0; i < rssRankList.length; i++) {
+        pasedRanks.ranks["rank" + String(i + 1)] = {
             rank: i + 1,
-            uri: rssRankingList[i].link[0].split('?')[0],
-            title: rssRankingList[i].title[0],
+            uri: rssRankList[i].link[0].split('?')[0],
+            title: rssRankList[i].title[0],
         };
     }
 
-    return rankingList;
+    return pasedRanks;
 };
 
-const getRankingLists = (body: any): Promise<RankList> => {
+const getParsedRanks = (body: any): Promise<RankList> => {
     return new Promise((resolve, reject) => {
         xml2js.parseStringPromise(body).then((result) => {
-            resolve(createRankingList(result.rss.channel[0].item));
+            resolve(parseRanks(result.rss.channel[0].item));
         }).catch((err) => {
             reject(err);
         });
     });
 }
 
-export default getRankingLists;
+export default getParsedRanks;

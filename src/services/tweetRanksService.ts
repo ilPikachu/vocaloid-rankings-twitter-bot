@@ -1,10 +1,10 @@
 import moment from "moment-timezone";
-import tweetPostStatUpdate from "./tweetPostStatUpdateService";
+import tweetPostStat from "./tweetPostStatService";
 import tweetTitleTruncater from "../utilities/tweetTitleTruncater";
 import Term from "../common/Term";
 import RankList from "../common/RankList";
 
-const rankingTweet = (processedRanking: RankList, type: Term) => {
+const tweetRanks = (rankList: RankList, type: Term) => {
     let tweetTitle = "";
     switch (type) {
         case Term.HOURLY:
@@ -24,12 +24,12 @@ const rankingTweet = (processedRanking: RankList, type: Term) => {
     }
 
     const tweet = tweetTitle
-        + tweetTitleTruncater(processedRanking.ranks.rank3.title) + "\n" + processedRanking.ranks.rank3.uri + '\n'
-        + tweetTitleTruncater(processedRanking.ranks.rank2.title) + "\n" + processedRanking.ranks.rank2.uri + "\n"
-        + tweetTitleTruncater(processedRanking.ranks.rank1.title) + "\n" + processedRanking.ranks.rank1.uri + "\n\n"
+        + tweetTitleTruncater(rankList.ranks.rank3.title) + "\n" + rankList.ranks.rank3.uri + '\n'
+        + tweetTitleTruncater(rankList.ranks.rank2.title) + "\n" + rankList.ranks.rank2.uri + "\n"
+        + tweetTitleTruncater(rankList.ranks.rank1.title) + "\n" + rankList.ranks.rank1.uri + "\n\n"
         + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
 
-    tweetPostStatUpdate(tweet, type);
+    tweetPostStat(tweet, type);
 }
 
-export default rankingTweet;
+export default tweetRanks;
