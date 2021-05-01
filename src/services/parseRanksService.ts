@@ -28,12 +28,8 @@ const parseRanks = (rssRankList: RssRank[]) => {
 };
 
 const getParsedRanks = (body: any): Promise<RankList> => {
-    return new Promise((resolve, reject) => {
-        xml2js.parseStringPromise(body).then((result) => {
-            resolve(parseRanks(result.rss.channel[0].item));
-        }).catch((err) => {
-            reject(err);
-        });
+    return xml2js.parseStringPromise(body).then((result) => {
+        return parseRanks(result.rss.channel[0].item);
     });
 }
 
