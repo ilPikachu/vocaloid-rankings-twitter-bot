@@ -1,9 +1,9 @@
-import schedule = require("node-schedule");
-import postRankingsController = require("./controllers/postRankingsController");
-import { Term } from "./common/term";
+import schedule from "node-schedule";
+import rankingTweetUpdater from "./controllers/postRankingsController";
+import Term from "./common/Term";
 
 const houlyAndDailyTerms = [Term.DAILY, Term.HOURLY];
 
-schedule.scheduleJob({minute: 0}, () => {
-    postRankingsController.rankingTweetUpdater(houlyAndDailyTerms);
+schedule.scheduleJob({ minute: 0 }, () => {
+    rankingTweetUpdater(houlyAndDailyTerms);
 });
