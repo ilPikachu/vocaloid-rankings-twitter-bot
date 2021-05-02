@@ -4,7 +4,7 @@ import tweetTitleTruncater from "../utilities/tweetTitleTruncater";
 import Term from "../common/Term";
 import RankList from "../common/RankList";
 
-const tweetRanks = (rankList: RankList, type: Term) => {
+const tweetRanks = async (rankList: RankList, type: Term) => {
     let tweetTitle = "";
     switch (type) {
         case Term.HOURLY:
@@ -29,7 +29,8 @@ const tweetRanks = (rankList: RankList, type: Term) => {
         + tweetTitleTruncater(rankList.ranks.rank1.title) + "\n" + rankList.ranks.rank1.uri + "\n\n"
         + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
 
-    tweetPostStat(tweet, type);
+    await tweetPostStat(tweet);
+    console.log(`${moment().utc().format()} ${type} Rank Tweet Successful`);
 }
 
 export default tweetRanks;

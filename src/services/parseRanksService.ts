@@ -27,10 +27,9 @@ const parseRanks = (rssRankList: RssRank[]) => {
     return pasedRanks;
 };
 
-const getParsedRanks = (body: any): Promise<RankList> => {
-    return xml2js.parseStringPromise(body).then((result) => {
-        return parseRanks(result.rss.channel[0].item);
-    });
+const getParsedRanks = async (body: any): Promise<RankList> => {
+    const result = await xml2js.parseStringPromise(body);
+    return parseRanks(result.rss.channel[0].item);
 }
 
 export default getParsedRanks;
