@@ -1,5 +1,5 @@
 import Twit from "twit";
-import fs from "fs";
+require("dotenv").config("../.env");
 
 interface TwitterAuth {
     consumer_key: string;
@@ -8,7 +8,13 @@ interface TwitterAuth {
     access_token_secret: string;
 }
 
-const twitAuth: TwitterAuth = JSON.parse(fs.readFileSync(process.env.HOME + "/Documents/vocaloid-rankings-twitter-bot/src/utilities/secrets.json").toString());
+const twitAuth: TwitterAuth = {
+    consumer_key: process.env.TWITTER_CONSUMER_KEY!,
+    consumer_secret: process.env.TWITTER_CONSUMER_SECRET!,
+    access_token: process.env.TWITTER_ACCESS_TOKEN!,
+    access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET!,
+};
+
 const twit = new Twit(twitAuth);
 
 export default twit;
