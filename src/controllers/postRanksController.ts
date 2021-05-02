@@ -24,7 +24,7 @@ const ranksTweetUpdateExpoBackoff = (term: Term, tweetDelay: number): Promise<vo
 
 const ranksTweetUpdater = (requestedTerms: Term[]) => {
     const rankPromises: Promise<void>[] = [];
-    requestedTerms.forEach((term, index) => { rankPromises.push(ranksTweetUpdateExpoBackoff(term, index * tweetDelay)) });
+    requestedTerms.forEach((term, index) => rankPromises.push(ranksTweetUpdateExpoBackoff(term, index * tweetDelay)));
     Promise.allSettled(rankPromises);
 }
 
