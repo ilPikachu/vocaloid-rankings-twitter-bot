@@ -5,7 +5,7 @@ import tweetRanks from "../services/tweetRanksService"
 import Term from "../common/Term";
 import sleep from "../utilities/sleep";
 
-const tweetDelay = 10 * 1000;
+const TWEET_INTERVAL_DELAY = 10 * 1000;
 
 const ranksTweetUpdate = async (term: Term, tweetDelay: number): Promise<void> => {
     const ranks = await getRanks(term);
@@ -24,7 +24,7 @@ const ranksTweetUpdateExpoBackoff = (term: Term, tweetDelay: number): Promise<vo
 
 const ranksTweetUpdater = (requestedTerms: Term[]) => {
     const rankPromises: Promise<void>[] = [];
-    requestedTerms.forEach((term, index) => rankPromises.push(ranksTweetUpdateExpoBackoff(term, index * tweetDelay)));
+    requestedTerms.forEach((term, index) => rankPromises.push(ranksTweetUpdateExpoBackoff(term, index * TWEET_INTERVAL_DELAY)));
     Promise.allSettled(rankPromises);
 }
 
