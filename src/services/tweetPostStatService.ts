@@ -1,7 +1,7 @@
-import twitUser from "../utilities/twitUser";
+import twitterUser from "../utilities/twitterUser";
 
 const tweetPostStat = async (message: string) => {
-    await twitUser.post("statuses/update", { status: message });
+    await twitterUser.post("statuses/update", { status: message });
 }
 
 export default tweetPostStat;

@@ -1,8 +1,8 @@
 # Logs
 logs
 
-# Env
-.env
+# Secrets
+secrets.json
 
 # Ranking data
 rank_data/

@@ -28,7 +28,7 @@ const tweetRanks = async (rankList: RankList, type: Term) => {
         + tweetTitleTruncater(rankList.ranks.rank2.title) + "\n" + rankList.ranks.rank2.uri + "\n"
         + tweetTitleTruncater(rankList.ranks.rank1.title) + "\n" + rankList.ranks.rank1.uri + "\n\n"
         + moment().tz("Asia/Tokyo").format("YYYY-MM-DD-HH");
-
+    
     await tweetPostStat(tweet);
     console.log(`${moment().utc().format()} ${type} Rank Tweet Successful`);
 }
