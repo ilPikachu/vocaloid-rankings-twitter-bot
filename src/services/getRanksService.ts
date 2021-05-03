@@ -1,6 +1,6 @@
 import axios from "axios";
-import Term from "../common/Term";
-import RankList from "../common/RankList";
+import Term from "../interfaces/Term";
+import RankList from "../interfaces/RankList";
 import getParsedRanks from "./parseRanksService";
 
 const getRanks = async (term: Term): Promise<RankList> => {

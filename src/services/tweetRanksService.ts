@@ -1,8 +1,8 @@
 import moment from "moment-timezone";
 import { tweetThread } from "./tweetPostService";
 import tweetTitleTruncater from "../utilities/tweetTitleTruncater";
-import Term from "../common/Term";
-import RankList from "../common/RankList";
+import Term from "../interfaces/Term";
+import RankList from "../interfaces/RankList";
 
 const tweetRanks = async (rankList: RankList, type: Term) => {
     await tweetThread(createRankThread(rankList, type));

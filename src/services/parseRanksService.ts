@@ -1,6 +1,6 @@
 import moment from "moment-timezone";
 import xml2js from "xml2js";
-import RankList from "../common/RankList"
+import RankList from "../interfaces/RankList"
 
 interface RssRank {
     title: string[];

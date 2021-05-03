@@ -1,6 +1,6 @@
 import schedule from "node-schedule";
 import ranksTweetUpdater from "./controllers/postRanksController";
-import Term from "./common/Term";
+import Term from "./interfaces/Term";
 
 const houlyAndDailyTerms = [Term.DAILY, Term.HOURLY];
 

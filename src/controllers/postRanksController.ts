@@ -2,7 +2,7 @@ import moment from "moment-timezone";
 import pRetry from "p-retry";
 import getRanks from "../services/getRanksService"
 import tweetRanks from "../services/tweetRanksService"
-import Term from "../common/Term";
+import Term from "../interfaces/Term";
 import sleep from "../utilities/sleep";
 
 const TWEET_INTERVAL_DELAY = 10 * 1000;
