@@ -15,10 +15,6 @@ const createTweetTitle = (type: Term): string => {
             return "毎時ランキング\n\n";
         case Term.DAILY:
             return "24時間ランキング\n\n";
-        case Term.WEEKLY:
-            return "週間ランキング\n\n";
-        case Term.MONTHLY:
-            return "月間ランキング\n\n";
         default:
             console.error("Ranking request not supported");
             return "";
