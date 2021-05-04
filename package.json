@@ -4,7 +4,7 @@
   "description": "Vocaloid songs ranking twitter bot, hourly updated tweets.",
   "main": "dist/app.js",
   "scripts": {
-    "start": "npx tsc && forever stopall && forever start -a -l ~/Documents/vocaloid-rankings-twitter-bot/logs/console_logs/console.log -o ~/Documents/vocaloid-rankings-twitter-bot/logs/stdout_logs/stdout.log -e ~/Documents/vocaloid-rankings-twitter-bot/logs/stderr_logs/stderr.log ~/Documents/vocaloid-rankings-twitter-bot/dist/app.js"
+    "start": "npx tsc && forever stopall && forever start -a -l ~/Documents/vocaloid-rankings-twitter-bot/logs/console.log -o ~/Documents/vocaloid-rankings-twitter-bot/logs/stdout.log -e ~/Documents/vocaloid-rankings-twitter-bot/logs/stderr.log ~/Documents/vocaloid-rankings-twitter-bot/dist/app.js"
   },
   "repository": {
     "type": "git",
