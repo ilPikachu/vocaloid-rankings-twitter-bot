@@ -7,8 +7,6 @@ The Vocaloid Rankings Twitter Bot post Vocaloid music rankings from Niconico eve
 
 It lets people discover the latest trending Vocaloid songs and help Vocaloid content creators to self-promote their songs to reach a wider audience.
 
-The bot reaches an average of 350K impressions per month. 
-
 ## To start
 - Create `secrets.json` under `src` with your twitter app auth
 ```
