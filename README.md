@@ -21,4 +21,5 @@ The bot reaches an average of 350K impressions per month.
 ```
 - In `npm start`, change all occurance of `~/Documents/vocaloid-rankings-twitter-bot/` to the cloned project directory
 - Create `logs/console_logs/console.log`, `logs/stdout_logs/stdout.log` and `logs/stderr_logs/stderr.log` under project directory for logging
+- `npm install`
 - `npm start`
