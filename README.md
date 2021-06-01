@@ -1,7 +1,7 @@
-# Vocaloid Rankings Twitter Bot 
+# <img src="https://user-images.githubusercontent.com/25991364/120397947-4719e980-c307-11eb-9747-26d383538195.jpeg" width="20" height="20"> Vocaloid Rankings Twitter Bot 
+
 [![Twitter Follow](https://img.shields.io/twitter/follow/voca_ranking.svg?style=social&label=Follow)](https://twitter.com/voca_ranking)
 [![License](https://img.shields.io/github/license/ilPikachu/vocaloid-rankings-twitter-bot)](https://github.com/ilPikachu/vocaloid-rankings-twitter-bot/blob/master/LICENSE)
-
 
 The Vocaloid Rankings Twitter Bot post Vocaloid music rankings from Niconico every hour.
 
